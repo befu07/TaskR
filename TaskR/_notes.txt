@@ -1,1 +1,2 @@
-﻿
+﻿install-package Microsoft.EntityFrameworkCore.SqlServer
+install-package Microsoft.EntityFrameworkCore.Design
