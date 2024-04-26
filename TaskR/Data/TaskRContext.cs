@@ -49,7 +49,12 @@ public partial class TaskRContext : DbContext
 
             entity.ToTable("AppUser");
 
+            entity.HasIndex(e => e.Email, "UQ_Email").IsUnique();
+
             entity.Property(e => e.AppRoleId).HasDefaultValue(1);
+            entity.Property(e => e.Email)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.PasswordHash)
                 .HasMaxLength(32)
                 .IsFixedLength();

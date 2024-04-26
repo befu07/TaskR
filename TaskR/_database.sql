@@ -67,3 +67,16 @@ CREATE TABLE TaskTags
 )
 
 update AppUser set AppRoleId=3 where Username = 'admin'
+
+go
+Alter Table AppUser Add Email varchar(100)
+go
+
+update AppUser set Email='admin@taskr.com' where Username = 'admin'
+
+update AppUser set Email='berni@taskr.com' where Username = 'berni'
+go
+
+ALTER TABLE AppUser ADD CONSTRAINT UQ_Email UNIQUE (Email)
+go
+

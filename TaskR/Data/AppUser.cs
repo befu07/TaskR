@@ -17,5 +17,7 @@ public partial class AppUser
 
     public int AppRoleId { get; set; }
 
+    public string? Email { get; set; }
+
     public virtual AppRole AppRole { get; set; } = null!;
 }
