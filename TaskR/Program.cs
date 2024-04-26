@@ -1,7 +1,15 @@
+using TaskR.Data;
+using TaskR.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<TaskRContext>();
+builder.Services.AddScoped<AccountService>();
+builder.Services.AddScoped<CryptoService256>();
 
 var app = builder.Build();
 
