@@ -1,2 +1,6 @@
 ﻿install-package Microsoft.EntityFrameworkCore.SqlServer
 install-package Microsoft.EntityFrameworkCore.Design
+
+dotnet ef dbcontext scaffold name="AppDb" Microsoft.EntityFrameworkCore.SqlServer -o Data -f
+
+"AppDb": "Data Source=.\\sqlexpress;Initial Catalog=TaskR;Persist Security Info=True;User ID=sa;Password=Admin2019$;TrustServerCertificate=True",
