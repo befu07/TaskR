@@ -6,7 +6,7 @@
     @Html.TextBoxFor(e => e.Username, new { @class = "form-control", placeholder = "Your UserName *" })
     @Html.ValidationMessageFor(e => e.Username)
 
-    @Html.PasswordFor(e => e.Password, new { id = "Password", @class = "form-control", placeholder = "Password *" })
+    @Html.PasswordFor(e => e.Password, new { @class = "form-control", placeholder = "Password *" })
     @Html.ValidationMessageFor(e => e.Password)
 
     @Html.PasswordFor(e => e.PasswordConfirm, new { @class = "form-control", placeholder = "Confirm Password *" })

@@ -3,6 +3,9 @@
 USE master
 GO
 
+Drop DATABASE if exists TaskR
+GO
+
 CREATE DATABASE TaskR
 GO
 
@@ -29,6 +32,8 @@ CREATE TABLE AppUser
 	AppRoleId INT NOT NULL DEFAULT(1) REFERENCES AppRole(Id)
 )
 GO
+
+
 CREATE TABLE ToDoList
 (
 	Id INT PRIMARY KEY IDENTITY,
@@ -61,3 +66,4 @@ CREATE TABLE TaskTags
 	  PRIMARY KEY (TaskId,TagsId)
 )
 
+update AppUser set AppRoleId=3 where Username = 'admin'
