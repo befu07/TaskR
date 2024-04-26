@@ -1,6 +1,8 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-LOGIN
+﻿<h2>LOGIN</h2>
+
+<form action="/Auth/Login" method="post">
+    <input type="text" class="form-control" name="Username" />
+    <input type="password" class="form-control" name="Password" />
+    <br />
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>

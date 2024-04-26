@@ -6,3 +6,11 @@
     <h1 class="display-4">Welcome</h1>
     <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
+@if (User.Identity.IsAuthenticated)
+{
+    <h3>Hallo, @User.Identity.Name!</h3>
+}
+else
+{
+    <h3>Hallo, Unbekannnte(r). Magst du dich nicht <a href="/Auth/Register">registrieren</a>?</h3>
+}
