@@ -1,14 +1,17 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model TaskR.Views.Auth.RegisterVm
 
 <h2>REGISTER</h2>
 
 <form action="/Auth/Register" method="post">
-    <input type="text" name="username" class="form-control" />
-    <input type="text" name="password" class="form-control" />
-    <input type="text" name="password" class="form-control" />
+    @Html.TextBoxFor(e => e.Username, new { @class = "form-control", placeholder = "Your UserName *" })
+    @Html.ValidationMessageFor(e => e.Username)
+
+    @Html.PasswordFor(e => e.Password, new { id = "Password", @class = "form-control", placeholder = "Password *" })
+    @Html.ValidationMessageFor(e => e.Password)
+
+    @Html.PasswordFor(e => e.PasswordConfirm, new { @class = "form-control", placeholder = "Confirm Password *" })
+    @Html.ValidationMessageFor(e => e.PasswordConfirm)
+    <br/>
+
     <button type="submit" class="btn btn-primary">Registrieren</button>
 </form>

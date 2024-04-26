@@ -49,6 +49,7 @@ public partial class TaskRContext : DbContext
 
             entity.ToTable("AppUser");
 
+            entity.Property(e => e.AppRoleId).HasDefaultValue(1);
             entity.Property(e => e.PasswordHash)
                 .HasMaxLength(32)
                 .IsFixedLength();

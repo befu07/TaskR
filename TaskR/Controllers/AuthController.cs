@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using TaskR.Services;
+using TaskR.Views.Auth;
 namespace TaskR.Controllers;
 
 public class AuthController : Controller
@@ -37,13 +38,18 @@ public class AuthController : Controller
 
 
     [HttpPost]
-    public async Task<IActionResult> Register(string username, string password)
+    public async Task<IActionResult> Register(TaskR.Views.Auth.RegisterVm form)
     {
-        await _accountService.RegisterNewUserAsync(username, password);
-
-        Console.WriteLine($"Jemand hat sich mit {username} und {password} registriert");
-
-        return RedirectToAction(nameof(Login));
+        if (ModelState.IsValid)
+        {
+            await _accountService.RegisterNewUserAsync(form.Username, form.Password);
+            Console.WriteLine($"Jemand hat sich mit {form.Username} und {form.Password} registriert");
+            return RedirectToAction(nameof(Login));
+        }
+        else
+        {
+            return View();
+        }
     }
 
     [HttpPost]
@@ -94,7 +100,7 @@ public class AuthController : Controller
         //In der Microsoft bzw. .NET Welt ist ein "Principal" ein Rechteinhaber
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-        await Console.Out.WriteLineAsync(nameClaim.Value+ " " + roleClaim.Value);
+        await Console.Out.WriteLineAsync(nameClaim.Value + " " + roleClaim.Value);
         //4. Den Rechteinhaber in der Anwendung "registrieren"
         //Um einen Benutzer in der Webanwendung als "eingeloggt" zu "markieren" (und ihm das Auth-Cookie zu schicken),
         //gibt es die Methode SignInAsync
@@ -104,7 +110,7 @@ public class AuthController : Controller
             claimsPrincipal
             );
 
-        await Console.Out.WriteLineAsync(nameClaim.Value+ " eingeloggt");
+        await Console.Out.WriteLineAsync(nameClaim.Value + " eingeloggt");
 
         //Der ClaimsPrincipal der hier erzeugt und "registriert" wird, ist nachher auch über eine spezielle Variable
         //...in Controllern und Views abrufbar. Die Variable heißt "User" und enthält neben allen Informationen
