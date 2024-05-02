@@ -5,7 +5,12 @@ namespace TaskR.Views.Auth
     public class RegisterVm
     {
         [Required(ErrorMessage = "Please enter a Name")]
+        [Length(3,50)]
         public string Username { get; set; }
+        
+        [Required(ErrorMessage = "Please enter a Email")]
+        [EmailAddress]
+        public string Email { get; set; }
 
         [Required(ErrorMessage = "Please enter password")]
         [DataType(DataType.Password)]

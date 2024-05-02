@@ -1,0 +1,56 @@
+﻿@model TaskR.Views.Admin.UserOverViewVm
+
+<table class="table" style="width:300px;">
+    <thead>
+        <tr>
+            <th class="col-1">
+                @Html.DisplayNameFor(model => model.AppUsers.First().Username)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUsers.First().PasswordHash)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUsers.First().Salt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUsers.First().RegisteredOn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUsers.First().Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUsers.First().AppRole)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.AppUsers) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Username)
+            </td>
+            <td width="50">
+                @Html.DisplayFor(modelItem => item.PasswordHash)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Salt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisteredOn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.AppRole.RoleName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

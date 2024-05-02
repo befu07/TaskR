@@ -18,6 +18,7 @@ namespace TaskR.Services
         {
             //Überprüfungen
 
+
             //Salt erzeugen
             var salt = _cryptoService.GenerateSalt();
 
@@ -78,6 +79,11 @@ namespace TaskR.Services
             //var dbAppUser = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefault();
             //return dbAppUser.AppRole.RoleName;
             return (await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync()).AppRole.RoleName;
+        }
+
+        internal async Task<List<AppUser>> GetAllUsers()
+        {
+            return await _ctx.AppUsers.Include(o => o.AppRole).ToListAsync();
         }
     }
 }
