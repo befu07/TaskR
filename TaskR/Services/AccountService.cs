@@ -14,11 +14,12 @@ namespace TaskR.Services
             _ctx = ctx;
         }
 
-        public async Task<bool> RegisterNewUserAsync(string username, string password)
+        public async Task<bool> RegisterNewUserAsync(string username, string password, string email)
         {
             //Überprüfungen
-
-
+            bool emailExists = await _ctx.AppUsers.Where(o => o.Email == email).AnyAsync();
+            if(emailExists) { return false; }
+            bool firstUserInDatabase = !(await _ctx.AppUsers.AnyAsync());
             //Salt erzeugen
             var salt = _cryptoService.GenerateSalt();
 
@@ -34,8 +35,11 @@ namespace TaskR.Services
                 PasswordHash = hash,
                 RegisteredOn = DateTime.Now,
                 Salt = salt,
+                Email = email,
                 Username = username
             };
+            if (firstUserInDatabase)
+                newUser.AppRoleId = 1; // Wenn sonst keine Benutzer in DB, AdminRolle 
 
             _ctx.AppUsers.Add(newUser);
 

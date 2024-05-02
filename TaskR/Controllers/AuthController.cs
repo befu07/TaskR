@@ -42,7 +42,12 @@ public class AuthController : Controller
     {
         if (ModelState.IsValid)
         {
-            await _accountService.RegisterNewUserAsync(form.Username, form.Password);
+            bool success = await _accountService.RegisterNewUserAsync(form.Username, form.Password, form.Email);
+            if (!success)
+            {
+                TempData["ErrorMessage"] = "Registration failed";
+                return View();
+            }
             Console.WriteLine($"Jemand hat sich mit {form.Username} und {form.Password} registriert");
             return RedirectToAction(nameof(Login));
         }

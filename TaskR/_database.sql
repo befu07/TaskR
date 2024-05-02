@@ -18,8 +18,8 @@ GO
 )
 GO
 INSERT INTO AppRole VALUES
-	('FreeUser'),
 	('Admin'),
+	('FreeUser'),
 	('PremiumUser')
 GO
 CREATE TABLE AppUser
@@ -29,7 +29,7 @@ CREATE TABLE AppUser
 	PasswordHash BINARY(32) NOT NULL,
 	Salt BINARY(32) NOT NULL,
 	RegisteredOn DATETIME NOT NULL,
-	AppRoleId INT NOT NULL DEFAULT(1) REFERENCES AppRole(Id)
+	AppRoleId INT NOT NULL DEFAULT(2) REFERENCES AppRole(Id)
 )
 GO
 
@@ -66,15 +66,8 @@ CREATE TABLE TaskTags
 	  PRIMARY KEY (TaskId,TagsId)
 )
 
-update AppUser set AppRoleId=3 where Username = 'admin'
-
 go
 Alter Table AppUser Add Email varchar(100)
-go
-
-update AppUser set Email='admin@taskr.com' where Username = 'admin'
-
-update AppUser set Email='berni@taskr.com' where Username = 'berni'
 go
 
 ALTER TABLE AppUser ADD CONSTRAINT UQ_Email UNIQUE (Email)
@@ -94,3 +87,4 @@ Add Constraint Fk_ToDoList_AppUserId
 foreign key (AppUserId) References AppUser(Id)  
 go
 
+select * from AppRole

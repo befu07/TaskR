@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskR.Data;
 using TaskR.Services;
 using TaskR.Views.Admin;
 
 namespace TaskR.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
         private readonly AccountService accountService;
@@ -13,7 +15,6 @@ namespace TaskR.Controllers
         {
             this.accountService = accountService;
         }
-
         public async Task<IActionResult> UserOverView()
         {
             UserOverViewVm vm = new();
