@@ -1,6 +1,7 @@
 ﻿using TaskR.Data;
 
-namespace TaskR.Views.Admin
+//namespace TaskR.Views.Admin
+namespace TaskR.Models
 {
     public class UserOverViewVm
     {

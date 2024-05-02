@@ -1,17 +1,17 @@
-﻿@model TaskR.Views.Admin.UserOverViewVm
+﻿@model UserOverViewVm
 
-<table class="table" style="width:300px;">
+<table class="table">
     <thead>
         <tr>
-            <th class="col-1">
+            <th>
                 @Html.DisplayNameFor(model => model.AppUsers.First().Username)
             </th>
-            <th>
+@*             <th>
                 @Html.DisplayNameFor(model => model.AppUsers.First().PasswordHash)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.AppUsers.First().Salt)
-            </th>
+            </th> *@
             <th>
                 @Html.DisplayNameFor(model => model.AppUsers.First().RegisteredOn)
             </th>
@@ -30,12 +30,12 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Username)
             </td>
-            <td width="50">
-                @Html.DisplayFor(modelItem => item.PasswordHash)
+@*             <td>
+                @item.PasswordHash
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Salt)
-            </td>
+                @item.Salt
+            </td> *@
             <td>
                 @Html.DisplayFor(modelItem => item.RegisteredOn)
             </td>

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskR.Data;
 using TaskR.Services;
-using TaskR.Views.Admin;
+using TaskR.Models;
 
 namespace TaskR.Controllers
 {
