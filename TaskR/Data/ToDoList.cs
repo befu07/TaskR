@@ -9,5 +9,9 @@ public partial class ToDoList
 
     public string Name { get; set; } = null!;
 
+    public int? AppUserId { get; set; }
+
+    public virtual AppUser? AppUser { get; set; }
+
     public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
 }

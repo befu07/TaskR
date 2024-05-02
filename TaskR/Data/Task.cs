@@ -17,8 +17,6 @@ public partial class Task
 
     public DateTime CompletedOn { get; set; }
 
-    public decimal? PricePerPerson { get; set; }
-
     public DateTime Deadline { get; set; }
 
     public int? Priority { get; set; }

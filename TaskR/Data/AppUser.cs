@@ -20,4 +20,6 @@ public partial class AppUser
     public string? Email { get; set; }
 
     public virtual AppRole AppRole { get; set; } = null!;
+
+    public virtual ICollection<ToDoList> ToDoLists { get; set; } = new List<ToDoList>();
 }

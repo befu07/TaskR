@@ -80,3 +80,17 @@ go
 ALTER TABLE AppUser ADD CONSTRAINT UQ_Email UNIQUE (Email)
 go
 
+ALTER TABLE Task 
+drop Column PricePerPerson
+go
+
+
+ALTER TABLE ToDoList
+Add AppUserId int 
+go
+
+ALTER TABLE ToDoList
+Add Constraint Fk_ToDoList_AppUserId
+foreign key (AppUserId) References AppUser(Id)  
+go
+

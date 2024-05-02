@@ -97,7 +97,6 @@ public partial class TaskRContext : DbContext
             entity.Property(e => e.Descripton)
                 .HasMaxLength(100)
                 .IsUnicode(false);
-            entity.Property(e => e.PricePerPerson).HasColumnType("decimal(9, 2)");
 
             entity.HasOne(d => d.ToDoList).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.ToDoListId)
@@ -131,6 +130,10 @@ public partial class TaskRContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.AppUser).WithMany(p => p.ToDoLists)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("Fk_ToDoList_AppUserId");
         });
 
         OnModelCreatingPartial(modelBuilder);
