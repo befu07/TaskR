@@ -42,7 +42,6 @@ namespace TaskR.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(ToDoCreateVm vm)
         {
-            //Todo
             if (ModelState.IsValid)
             {
                 var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);

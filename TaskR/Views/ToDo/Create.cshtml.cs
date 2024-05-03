@@ -1,13 +1,10 @@
-﻿using TaskR.Data;
+﻿using System.ComponentModel.DataAnnotations;
+using TaskR.Data;
 
 namespace TaskR.Models;
-
 public class ToDoCreateVm
 {
-    //public string Id { get; set; }
-
+    [Required]
+    [MaxLength(30)]
     public string Name { get; set; } = null!;
-
-    //public string AppUserId { get; set; }
-
 }
