@@ -49,7 +49,8 @@ public class AuthController : Controller
             if (!success)
             {
                 TempData["ErrorMessage"] = "Registration failed";
-            return RedirectToAction(nameof(Register));
+                // Todo testln?
+                return RedirectToAction(nameof(Register));
                 return View();
             }
             Console.WriteLine($"Jemand hat sich mit {form.Username} und {form.Password} registriert");
@@ -73,7 +74,7 @@ public class AuthController : Controller
             var role = await LogUserIntoWebApp(username);
             if (role.RoleName == "Admin")
             {
-            return RedirectToAction(nameof(AdminController.UserOverView), AdminController.Name);
+                return RedirectToAction(nameof(AdminController.UserOverView), AdminController.Name);
             }
             // TODO: – Free- und Premium-Tier Benutzer sollen auf die Übersichtsseite ihrer To - Do Listen weitergeleitet werden,
             return RedirectToAction(nameof(ToDoController.Index), ToDoController.Name);

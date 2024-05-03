@@ -5,11 +5,12 @@ using TaskR.Services;
 
 namespace TaskR.Controllers
 {
-    [Authorize(Roles = "FreeUser,PremiumUser")]
     //[Authorize(Roles = "FreeUser")]
     //[Authorize(Roles = "PremiumUser")]
+    [Authorize(Roles = "FreeUser,PremiumUser")]
     public class ToDoController : Controller
     {
+
         public static string Name = nameof(ToDoController).Replace("Controller", null);
         private readonly ToDoListService _toDoListService;
         private readonly AccountService _accountService;
@@ -19,7 +20,6 @@ namespace TaskR.Controllers
             _toDoListService = toDoListService;
             _accountService = accountService;
         }
-
         public async Task<IActionResult> Index()
         {
             //Todo List where name = bla
@@ -33,6 +33,7 @@ namespace TaskR.Controllers
             };
             return View(vm);
         }
+
         [HttpGet]
         public IActionResult Create()
         {
