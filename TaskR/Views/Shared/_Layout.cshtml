@@ -31,6 +31,13 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="UserOverView">Users</a>
                                 </li>
                             }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="ToDo" asp-action="Index">ToDos</a>
+                                </li>
+                                
+                            }
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="Logout">Logout</a>
                             </li>

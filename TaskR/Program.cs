@@ -11,6 +11,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<TaskRContext>();
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<CryptoService256>();
+builder.Services.AddScoped<ToDoListService>();
 
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

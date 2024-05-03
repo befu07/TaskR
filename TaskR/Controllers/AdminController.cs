@@ -9,6 +9,7 @@ namespace TaskR.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
+        public static string Name = nameof(AdminController).Replace("Controller", null);
         private readonly AccountService accountService;
 
         public AdminController(AccountService accountService)

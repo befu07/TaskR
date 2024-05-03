@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Security.Claims;
+using TaskR.Data;
 using TaskR.Services;
 using TaskR.Views.Auth;
 namespace TaskR.Controllers;
@@ -46,6 +49,7 @@ public class AuthController : Controller
             if (!success)
             {
                 TempData["ErrorMessage"] = "Registration failed";
+            return RedirectToAction(nameof(Register));
                 return View();
             }
             Console.WriteLine($"Jemand hat sich mit {form.Username} und {form.Password} registriert");
@@ -66,18 +70,23 @@ public class AuthController : Controller
         if (userCanLogIn)
         {
             //Wir erkennen den Benutzer, und er darf sich wirklich "einloggen"
-            await LogUserIntoWebApp(username);
-            return RedirectToAction(nameof(HomeController.Privacy), HomeController.Name);
+            var role = await LogUserIntoWebApp(username);
+            if (role.RoleName == "Admin")
+            {
+            return RedirectToAction(nameof(AdminController.UserOverView), AdminController.Name);
+            }
+            // TODO: – Free- und Premium-Tier Benutzer sollen auf die Übersichtsseite ihrer To - Do Listen weitergeleitet werden,
+            return RedirectToAction(nameof(ToDoController.Index), ToDoController.Name);
         }
         else //Wenn wir den Benutzer NICHT erkennen, ...
         {
-            //...wird er auf die Login-Seite zurückgeleitet
+            TempData["ErrorMessage"] = "Zugangsdaten Falsch";            //...wird er auf die Login-Seite zurückgeleitet
             return RedirectToAction(nameof(Login));
         }
     }
 
     [NonAction]
-    private async Task LogUserIntoWebApp(string username)
+    private async Task<AppRole> LogUserIntoWebApp(string username)
     {
         //1. Claims (Behauptungen) über den Benutzer zusammentragen
         //Ein Claim ist einfach nur ein Key-Value-Pair - Ein Wert mit einem bestimmten Namen
@@ -86,8 +95,8 @@ public class AuthController : Controller
         //Damit das ASP.NET Core Auth-System mit Cookies funktioniert, ist ein Claim besonders wichtig: Der Name-Claim
         var nameClaim = new Claim(ClaimTypes.Name, username);
 
-        string rollenname = await _accountService.GetRoleByUserNameAsync(username);
-        var roleClaim = new Claim(ClaimTypes.Role, rollenname);
+        AppRole role = await _accountService.GetRoleByUserNameAsync(username);
+        var roleClaim = new Claim(ClaimTypes.Role, role.RoleName);
 
         //Alle Claims die dieser Liste (und damit der Identity bzw. dem Principal) hinzugefügt werden,
         //...werden dann im Auth-Cookie gespeichert (und können dort auch wieder ausgelesen werden)
@@ -127,6 +136,7 @@ public class AuthController : Controller
         //...Interface-Elemente anzuzeigen bzw. zu verstecken, je nachdem ob ein eingeloggter oder anonymer Benutzer
         //...die View gerade ansieht).
         //User.Claims erlaubt Zugriff auf alle gespeicherten Claims
+        return role;
     }
 }
 

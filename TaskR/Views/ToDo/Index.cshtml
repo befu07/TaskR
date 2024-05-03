@@ -1,0 +1,27 @@
+﻿@model ToDoIndexVm
+<h1>ToDo - Listen für @Model.Name</h1>
+<h3>Übersicht</h3>
+<table>
+    <thead>
+    <th>Name</th>
+    <th>Offene Tasks</th>
+    <th>Details</th>
+    <th>Delete</th>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.ToDoLists)
+        {
+            <tr>
+                <td style="width:200px">@item.Name</td>
+                <td style="width:200px">@item.Tasks.Count</td>
+                <td style="width:140px">
+                    <a href="/ToDo/Details/@item.Id">Details</a>
+                </td>
+                <td style="width:140px">
+                    <a href="/ToDo/Delete/@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a href="/ToDo/Create">Create</a>
