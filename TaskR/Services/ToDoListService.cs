@@ -1,4 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography;
 using TaskR.Data;
 
 namespace TaskR.Services
@@ -36,6 +39,35 @@ namespace TaskR.Services
         internal async Task<List<ToDoList>> GetToDoListsByUserIdAsync(int userId)
         {
             return (await _ctx.ToDoLists.Include(o => o.Tasks).Where(x => x.AppUserId == userId).ToListAsync());
+        }
+
+        internal async Task<ToDoList?> GetToDoListByIdAsync(int id)
+        {
+            return await _ctx.ToDoLists.Where(x => x.Id == id).Include(o => o.Tasks).ThenInclude(o => o.Tags).FirstOrDefaultAsync();
+            //return await _ctx.ToDoLists.FindAsync(id);
+        }
+        internal async Task<List<SelectListItem>> GetTDLSelectListByUserIdAsync(int id)
+        {
+            var items = await _ctx.ToDoLists
+                .Where(x => x.AppUserId == id)
+                .ToDictionaryAsync(o => o.Id);
+            var selectlistitems = items.Select(
+                o => new SelectListItem(o.Value.Name, o.Key.ToString())
+                );
+            var selectList = new List<SelectListItem>(selectlistitems);
+            return selectList;
+        }
+
+        internal List<SelectListItem> GetPrioritySelectList()
+        {
+            return new List<SelectListItem>
+            {
+                new SelectListItem("Höchste","1"),
+                new SelectListItem("Hoch","2"),
+                new SelectListItem("Normal","3"),
+                new SelectListItem("Niedrig","4"),
+                new SelectListItem("Keine","5")
+            };
         }
     }
 }

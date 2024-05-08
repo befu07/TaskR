@@ -1,0 +1,68 @@
+﻿@model CreateTaskVm
+@{
+}
+
+@* @Html.DropDownListFor(m => m.ToDoListId, Model.SelectList_ToDoList) *@
+
+<div class="container">
+    <form action="/ToDo/CreateTask" method="post">
+        <input type="hidden" name="ToDoListId" value="@Model.ToDoListId" />
+@*         
+    <div class="row">
+            <div class="col-md-3">
+                ToDoList: 
+            </div>
+            <div class="col-md-3">
+                <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectList_ToDoList"></select>
+            </div>
+        </div> 
+        *@
+        <div class="row">
+            <div class="col-md-3">
+                Description:
+            </div>
+            <div class="col-md-6">
+                <textarea class="form-control" type="text" name="Descripton"></textarea>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                Description:
+            </div>
+            <div class="col-md-6">
+                <input data-role="tagsinput" type="text" value="Amsterdam,Washington,Sydney,Beijing,Cairo" name="TagsInput"></input>
+            </div>
+        </div>
+        <div>
+            <select multiple data-role="tagsinput">
+  <option value="Amsterdam">Amsterdam</option>
+  <option value="Washington">Washington</option>
+  <option value="Sydney">Sydney</option>
+  <option value="Beijing">Beijing</option>
+  <option value="Cairo">Cairo</option>
+</select
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                Deadline:
+            </div>
+            <div class="col-md-6">
+                <input class="form-control" type="date" name="Deadline" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                Priorität:
+            </div>
+            <div class="col-md-6">
+                <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.Priorities"></select>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-md-1">
+                <input type="submit" />
+            </div>
+        </div>
+    </form>
+</div>
+@* @Model.SelectList_ToDoList *@

@@ -22,7 +22,6 @@ namespace TaskR.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            //Todo List where name = bla
             var userName = this.User.Identity.Name;
             var userId = await _accountService.GetAppUserIdByNameAsync(userName);
             var lists = await _toDoListService.GetToDoListsByUserIdAsync(userId);
@@ -40,13 +39,50 @@ namespace TaskR.Controllers
             //Todo
             return View();
         }
+        [HttpGet]
+        public async Task<IActionResult> CreateTask(int id)
+        {
+            var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+            var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
+            var priorities = _toDoListService.GetPrioritySelectList();
+            var vm = new CreateTaskVm
+            {
+                ToDoListId = id,
+                SelectList_ToDoList = tdlSelectList,
+                Priorities = priorities
+            };
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateTask(CreateTaskVm vm)
+        {
+            //TODO 
+            var testln = vm;
+
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int id)
+        {
+            var list = await _toDoListService.GetToDoListByIdAsync(id);
+            if (list == null) { return RedirectToAction(nameof(Index)); }
+            var vm = new ToDoDetailsVm
+            {
+                Id = list.Id,
+                Name = list.Name,
+                Tasks = list.Tasks
+            };
+            return View(vm);
+        }
         [HttpPost]
         public async Task<IActionResult> Create(ToDoCreateVm vm)
         {
             if (ModelState.IsValid)
             {
                 var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
-                bool success = await _toDoListService.CreateNewListAsync(userId,vm.Name);
+                bool success = await _toDoListService.CreateNewListAsync(userId, vm.Name);
                 if (!success)
                 {
                     TempData["ErrorMessage"] = "Name existiert bereits";
@@ -56,5 +92,6 @@ namespace TaskR.Controllers
             }
             return View();
         }
+
     }
 }
