@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using TaskR.Models;
 using TaskR.Services;
 
@@ -48,6 +49,7 @@ namespace TaskR.Controllers
             var tags = await _toDoListService.GetAvailableTagsAsync();
             var vm = new CreateTaskVm
             {
+                MSL_Tags = new MultiSelectList(tags, "Id", "Name"),
                 ToDoListId = id,
                 AvailableTags = tags,
                 SelectListItems_ToDoList = tdlSelectList,
@@ -59,25 +61,34 @@ namespace TaskR.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateTask(CreateTaskVm vm)
         {
-            //Todo 
-            //vm.SelectedTags = 
             if (ModelState.IsValid)
             {
+                var selectedTags = await _toDoListService.GetTagsByIntArrayAsync(vm.SelectedTagIds);
                 TaskR.Data.Task task = new TaskR.Data.Task
                 {
+                    ToDoListId = vm.ToDoListId,
                     Descripton = vm.Descripton,
                     Deadline = vm.Deadline,
+                    IsCompleted = false,
                     CreatedOn = DateTime.Now,
-                    Tags = vm.SelectedTags
+                    Priority = vm.Priority,
+                    Tags = selectedTags
                 };
                 //TODO 
-                //await _toDoListService.CreateNewTaskItemAsync();
-                return RedirectToAction(nameof(Index));
+                await _toDoListService.CreateNewTaskItemAsync(task);
+                return RedirectToAction(nameof(Details), routeValues: new {id= vm.ToDoListId });
+            //return RedirectToAction(nameof(Index), HomeController.Name);
+                //return View(nameof(Index));
+                //return RedirectToAction(nameof(Index));
             }
+            else
+            {
+
             var testln = vm;
-
-
             return RedirectToAction(nameof(Index), HomeController.Name);
+            }
+
+
         }
 
         [HttpGet]

@@ -23,7 +23,7 @@ public class CreateTaskVm
     public List<SelectListItem>? SelectListItems_Tags { get; set; } = new();
     public List<Tag> AvailableTags { get; set; } = new();
     public List<Tag> SelectedTags { get; set; } = new();
-    public int[] SelectedTagIds { get; set; }
-    public MultiSelectList MSL_Tags { get; set; }
+    public int[]? SelectedTagIds { get; set; }
+    public MultiSelectList? MSL_Tags { get; set; }
     #endregion
 }

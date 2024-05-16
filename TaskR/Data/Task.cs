@@ -15,7 +15,7 @@ public partial class Task
 
     public DateTime CreatedOn { get; set; }
 
-    public DateTime CompletedOn { get; set; }
+    public DateTime? CompletedOn { get; set; }
 
     public DateTime? Deadline { get; set; }
 
