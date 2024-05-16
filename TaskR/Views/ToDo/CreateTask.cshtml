@@ -4,6 +4,8 @@
 
 @* @Html.DropDownListFor(m => m.ToDoListId, Model.SelectList_ToDoList) *@
 
+<h6><a href="/ToDo/TDLDetails/@Model.ToDoListId">Zurück zu Liste</a></h6>
+<br />
 <div class="container">
     <form action="/ToDo/CreateTask" method="post">
 
@@ -46,11 +48,11 @@
             <label class="control-label col-md-3" for="Tags">
                 Tags:
             </label>
-            @*             <div class="col-md-3">
-            <select multiple asp-for="@Model.SelectedTags" asp-items="@Model.SelectListItems_Tags"></select>
-            </div> *@
-
             <div class="col-md-3">
+@*                 <select asp-for="SelectedTagIds"
+                        asp-items="Model.MSL_Tags"
+                        class="form-control">
+                </select> *@
                 <select asp-for="SelectedTagIds"
                         asp-items="Model.MSL_Tags"
                         class="form-control">
@@ -68,5 +70,10 @@
             </div>
         </div>
     </form>
+    <br />
+    <span style="color:red">
+        @TempData["ErrorMessage"]
+    </span>
+    @ViewBag.ErrorMessage
 </div>
 @* @Model.SelectList_ToDoList *@
