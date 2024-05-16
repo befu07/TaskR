@@ -70,27 +70,34 @@ namespace TaskR.Controllers
                 };
                 //TODO 
                 await _toDoListService.CreateNewTaskItemAsync(task);
-                return RedirectToAction(nameof(Details), routeValues: new {id= vm.ToDoListId });
-            //return RedirectToAction(nameof(Index), HomeController.Name);
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
+                //return RedirectToAction(nameof(Index), HomeController.Name);
                 //return View(nameof(Index));
                 //return RedirectToAction(nameof(Index));
             }
             else
             {
-
-            var testln = vm;
-            return RedirectToAction(nameof(Index), HomeController.Name);
+                var errormessages = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+                var errorstring = string.Join(", ", errormessages);
+                TempData["ErrorMessage"] = errorstring;
+                return RedirectToAction(nameof(CreateTask), ToDoController.Name, routeValues: new { id = vm.ToDoListId });
+                /*
+                    return RedirectToAction(nameof(CreateTask), ToDoController.Name, fragment: vm.ToDoListId.ToString());
+                    return View(nameof(CreateTask));
+                    return View(nameof(CreateTask), model: new {id = vm.ToDoListId});
+                    return RedirectToAction(nameof(Index), HomeController.Name);
+                 */
             }
 
 
         }
 
         [HttpGet]
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> TDLDetails(int id)
         {
             var list = await _toDoListService.GetToDoListByIdAsync(id);
             if (list == null) { return RedirectToAction(nameof(Index)); }
-            var vm = new ToDoDetailsVm
+            var vm = new TDLDetailsVm
             {
                 Id = list.Id,
                 Name = list.Name,
@@ -98,8 +105,9 @@ namespace TaskR.Controllers
             };
             return View(vm);
         }
+
         [HttpPost]
-        public async Task<IActionResult> CreateToDoList(ToDoCreateVm vm)
+        public async Task<IActionResult> TDLCreate(ToDoCreateVm vm)
         {
             if (ModelState.IsValid)
             {
@@ -115,7 +123,7 @@ namespace TaskR.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult CreateToDoList()
+        public IActionResult TDLCreate()
         {
             //Todo
             return View();

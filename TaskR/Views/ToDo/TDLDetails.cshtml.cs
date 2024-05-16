@@ -2,7 +2,7 @@
 using Task = TaskR.Data.Task;
 
 namespace TaskR.Models;
-public class ToDoDetailsVm
+public class TDLDetailsVm
 {
     public int Id { get; set; }
 
