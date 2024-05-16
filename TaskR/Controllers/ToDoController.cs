@@ -35,12 +35,6 @@ namespace TaskR.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            //Todo
-            return View();
-        }
-        [HttpGet]
         public async Task<IActionResult> CreateTask(int id)
         {
             var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
@@ -105,7 +99,7 @@ namespace TaskR.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> Create(ToDoCreateVm vm)
+        public async Task<IActionResult> CreateToDoList(ToDoCreateVm vm)
         {
             if (ModelState.IsValid)
             {
@@ -118,6 +112,12 @@ namespace TaskR.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            return View();
+        }
+        [HttpGet]
+        public IActionResult CreateToDoList()
+        {
+            //Todo
             return View();
         }
 
