@@ -87,4 +87,15 @@ Add Constraint Fk_ToDoList_AppUserId
 foreign key (AppUserId) References AppUser(Id)  
 go
 
-select * from AppRole
+alter TABLE Task
+	alter column Deadline DATETIME
+
+go
+
+Insert into Tags Values 
+	('Chores', 'EEFF88'),
+	('Prdctvty', '881122'),
+	('Mintnnce', '555555'),
+	('Educatin', '3399FF')
+
+go

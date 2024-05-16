@@ -69,5 +69,18 @@ namespace TaskR.Services
                 new SelectListItem("Keine","5")
             };
         }
+        internal async Task<List<Tag>> GetAvailableTagsAsync()
+        {
+            return await _ctx.Tags.ToListAsync();
+        }
+        internal  List<SelectListItem> GetTagsSelectList(List<Tag> tasks)
+        {
+            var list = new List<SelectListItem>();
+            foreach(var task in tasks)
+            {
+                list.Add(new SelectListItem(task.Name, task.Id.ToString()));
+            }
+            return list;
+        }
     }
 }

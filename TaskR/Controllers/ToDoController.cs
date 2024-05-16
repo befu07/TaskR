@@ -45,22 +45,39 @@ namespace TaskR.Controllers
             var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
             var priorities = _toDoListService.GetPrioritySelectList();
+            var tags = await _toDoListService.GetAvailableTagsAsync();
             var vm = new CreateTaskVm
             {
                 ToDoListId = id,
-                SelectList_ToDoList = tdlSelectList,
-                Priorities = priorities
+                AvailableTags = tags,
+                SelectListItems_ToDoList = tdlSelectList,
+                SelectListItems_Priorities = priorities,
+                SelectListItems_Tags = _toDoListService.GetTagsSelectList(tags)
             };
             return View(vm);
         }
         [HttpPost]
         public async Task<IActionResult> CreateTask(CreateTaskVm vm)
         {
-            //TODO 
+            //Todo 
+            //vm.SelectedTags = 
+            if (ModelState.IsValid)
+            {
+                TaskR.Data.Task task = new TaskR.Data.Task
+                {
+                    Descripton = vm.Descripton,
+                    Deadline = vm.Deadline,
+                    CreatedOn = DateTime.Now,
+                    Tags = vm.SelectedTags
+                };
+                //TODO 
+                //await _toDoListService.CreateNewTaskItemAsync();
+                return RedirectToAction(nameof(Index));
+            }
             var testln = vm;
 
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), HomeController.Name);
         }
 
         [HttpGet]
