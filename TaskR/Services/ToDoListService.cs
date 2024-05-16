@@ -82,5 +82,16 @@ namespace TaskR.Services
             }
             return list;
         }
+
+        internal async Task<List<Tag>> GetTagsByIntArrayAsync(int[] selectedTagIds)
+        {
+            return await _ctx.Tags.Where(o=>selectedTagIds.Contains(o.Id)).ToListAsync();
+        }
+
+        internal async System.Threading.Tasks.Task CreateNewTaskItemAsync(Data.Task task)
+        {
+            await _ctx.Tasks.AddAsync(task);
+            await _ctx.SaveChangesAsync();
+        }
     }
 }

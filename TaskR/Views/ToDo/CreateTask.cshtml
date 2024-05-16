@@ -6,16 +6,16 @@
 
 <div class="container">
     <form action="/ToDo/CreateTask" method="post">
-        
+
         @* <input type="hidden" name="ToDoListId" value="@Model.ToDoListId" /> *@
-    <div class="row">
+        <div class="row">
             <div class="col-md-3">
-                ToDoList: 
+                ToDoList:
             </div>
             <div class="col-md-3">
                 <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
             </div>
-        </div> 
+        </div>
 
         <div class="row">
             <div class="col-md-3">
@@ -42,17 +42,25 @@
                 <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.SelectListItems_Priorities"></select>
             </div>
         </div>
-         <div class="row">
+        <div class="row">
             <label class="control-label col-md-3" for="Tags">
                 Tags:
             </label>
-@*             <div class="col-md-3">
-                <select multiple asp-for="@Model.SelectedTags" asp-items="@Model.SelectListItems_Tags"></select>
-            </div> *@
-            @*
-                <div class="col-md-3">
+            @*             <div class="col-md-3">
             <select multiple asp-for="@Model.SelectedTags" asp-items="@Model.SelectListItems_Tags"></select>
             </div> *@
+
+            <div class="col-md-3">
+                <select asp-for="SelectedTagIds"
+                        asp-items="Model.MSL_Tags"
+                        class="form-control">
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <a href="/ToDo/CreateTag/">++Tag</a>
+            </div>
+
         </div>
         <div class="row ">
             <div class="col-md-1">
