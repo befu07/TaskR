@@ -76,12 +76,13 @@ public class AuthController : Controller
             {
                 return RedirectToAction(nameof(AdminController.UserOverView), AdminController.Name);
             }
-            // TODO: – Free- und Premium-Tier Benutzer sollen auf die Übersichtsseite ihrer To - Do Listen weitergeleitet werden,
+            // Free- und Premium-Tier Benutzer sollen auf die Übersichtsseite ihrer To - Do Listen weitergeleitet werden,
             return RedirectToAction(nameof(ToDoController.Index), ToDoController.Name);
         }
         else //Wenn wir den Benutzer NICHT erkennen, ...
         {
-            TempData["ErrorMessage"] = "Zugangsdaten Falsch";            //...wird er auf die Login-Seite zurückgeleitet
+            //...wird er auf die Login-Seite zurückgeleitet
+            TempData["ErrorMessage"] = "Zugangsdaten Falsch";            
             return RedirectToAction(nameof(Login));
         }
     }

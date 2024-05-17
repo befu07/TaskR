@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Collections.Generic;
+using System.Security.Claims;
 using TaskR.Models;
 using TaskR.Services;
 
@@ -26,11 +27,26 @@ namespace TaskR.Controllers
         {
             var userName = this.User.Identity.Name;
             var userId = await _accountService.GetAppUserIdByNameAsync(userName);
+
             var lists = await _toDoListService.GetToDoListsByUserIdAsync(userId);
+            var isPremiumUser = this.User.Claims.Any(c => c.Type == ClaimTypes.Role && c.Value == "PremiumUser");
+            int maxLists;
+            if (isPremiumUser)
+            {
+                maxLists = 100;
+            }
+            else
+            {
+                maxLists = 5;
+            }
+
             var vm = new ToDoIndexVm
             {
                 Name = userName,
-                ToDoLists = lists
+                ToDoLists = lists,
+                MaxLists = maxLists,
+                IsPremiumUser = isPremiumUser,
+                IsFreeUser = !isPremiumUser
             };
             return View(vm);
         }
@@ -134,7 +150,7 @@ namespace TaskR.Controllers
                 TempData["DeleteMessage"] = "Eintrag gelöscht!";
                 return RedirectToAction(nameof(Index));
             }
-            else if(result > 1)
+            else if (result > 1)
             {
                 TempData["DeleteMessage"] = $"Liste und verknüpfte Aufgaben gelöscht!";
                 return RedirectToAction(nameof(Index));
@@ -159,6 +175,12 @@ namespace TaskR.Controllers
                 TempData["DeleteError"] = "Löschen fehlgeschlagen!";
                 return RedirectToAction(nameof(Index));
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> TaskDetails(int id)
+        {
+            var result = await _toDoListService.DeleteTaskByIdAsync(id);
+            return View(result);
         }
 
     }

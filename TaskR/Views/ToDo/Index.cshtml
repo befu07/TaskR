@@ -1,19 +1,23 @@
 ﻿@model ToDoIndexVm
-<h1>ToDo - Listen für @Model.Name</h1>
-<h3>Übersicht</h3>
+<h2>ToDo - Listen für @Model.Name</h2>
+@* <h3>Übersicht</h3> *@
+<br />
 <table>
     <thead>
     <th>Name</th>
-    <th>Offene Tasks</th>
+    <th>Tasks</th>
+    <th>Offen</th>
     <th>Details</th>
     <th> </th>
     </thead>
     <tbody>
         @foreach (var item in Model.ToDoLists)
         {
+            int openTasksCount = @item.Tasks.Where(o => !o.IsCompleted).Count();
             <tr>
                 <td style="width:200px">@item.Name</td>
                 <td style="width:200px">@item.Tasks.Count</td>
+                <td style="width:200px">@openTasksCount</td>
                 <td style="width:140px">
                     <a href="/ToDo/TDLDetails/@item.Id">Details</a>
                 </td>
@@ -28,4 +32,21 @@
 </table>
 <p style="color:red">@TempData["ErrorMessage"]</p>
 <p style="color:green">@TempData["DeleteMessage"]</p>
-<a href="/ToDo/TDLCreate">Create</a>
+
+<div>
+    @{
+        if (Model.RemainingLists > 0)
+        {
+            <p>Du kannst noch @Model.RemainingLists Liste(n) erstellen (von insgesamt @Model.MaxLists) </p>
+            <a href="/ToDo/TDLCreate">Create</a>
+        }
+        if (Model.RemainingLists < 1)
+        {
+            <p class="text-danger">Du hast alle Slots aufgebraucht! </p>
+            if (Model.IsFreeUser)
+            {
+                <p class="text-danger">Premium kaufen!</p>
+            }
+        }
+    }
+</div>
