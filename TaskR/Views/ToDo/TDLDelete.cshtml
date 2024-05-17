@@ -21,7 +21,7 @@
         @foreach (var item in Model.Tasks)
         {
             bool isUrgent = item.IsUrgent();
-            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger" ;
+            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger";
             @* string stlyestring = isUrgent ? @"style=background-color:lightpink" : ""; *@
             @* var urgentstyle = isUrgent ? "style='background-color:lightpink'" : String.Empty; *@
             <tr @stlyestring>
@@ -42,16 +42,11 @@
                 <td>
                     <a>Abschließen</a><br />
                     <a>Details</a><br />
-                    @* <a>Löschen</a><br /> *@
-
-                    <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
+                    <a>Löschen</a><br />
                 </td>
             </tr>
         }
     </tbody>
 </table>
-
-<p style="color:red">@TempData["ErrorMessage"]</p>
-<p style="color:green">@TempData["DeleteMessage"]</p>
 
 <a href="/ToDo/CreateTask/@Model.Id">Create Task</a>

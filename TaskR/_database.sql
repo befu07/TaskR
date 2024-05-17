@@ -99,3 +99,25 @@ Insert into Tags Values
 	('Educatin', '3399FF')
 
 go
+
+
+-- Löschweitergabe für Zwischentabelle ( wenn Task gelöscht wird) 
+-- FK-Constraints wurden vorher gedroppt
+ALTER TABLE [dbo].[TaskTags]  WITH CHECK ADD FOREIGN KEY([TagsId])
+REFERENCES [dbo].[Tags] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[TaskTags]  WITH CHECK ADD FOREIGN KEY([TaskId])
+REFERENCES [dbo].[Task] ([Id])
+ON DELETE CASCADE
+GO
+-- Löschweitergabe für Task ( wenn Liste gelöscht wird) 
+-- FK-Constraint wurde vorher gedroppt
+ALTER TABLE [dbo].[Task]  WITH CHECK ADD FOREIGN KEY([ToDoListId])
+REFERENCES [dbo].[ToDoList] ([Id])
+ON DELETE CASCADE
+GO
+
+
+

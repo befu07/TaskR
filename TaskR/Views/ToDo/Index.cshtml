@@ -6,7 +6,7 @@
     <th>Name</th>
     <th>Offene Tasks</th>
     <th>Details</th>
-    <th>Delete</th>
+    <th> </th>
     </thead>
     <tbody>
         @foreach (var item in Model.ToDoLists)
@@ -18,10 +18,14 @@
                     <a href="/ToDo/TDLDetails/@item.Id">Details</a>
                 </td>
                 <td style="width:140px">
-                    <a href="/ToDo/TDLDelete/@item.Id">Delete</a>
+                    @* <a href="/ToDo/TDLDelete/@item.Id">Delete</a> *@
+                    <a href="/ToDo/TDLDelete/@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('@item.Name löschen?')">Delete</a>
+
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<p style="color:red">@TempData["ErrorMessage"]</p>
+<p style="color:green">@TempData["DeleteMessage"]</p>
 <a href="/ToDo/TDLCreate">Create</a>

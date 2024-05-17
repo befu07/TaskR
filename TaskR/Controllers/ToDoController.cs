@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 using TaskR.Models;
 using TaskR.Services;
 
@@ -71,9 +72,6 @@ namespace TaskR.Controllers
                 //TODO 
                 await _toDoListService.CreateNewTaskItemAsync(task);
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
-                //return RedirectToAction(nameof(Index), HomeController.Name);
-                //return View(nameof(Index));
-                //return RedirectToAction(nameof(Index));
             }
             else
             {
@@ -88,8 +86,6 @@ namespace TaskR.Controllers
                     return RedirectToAction(nameof(Index), HomeController.Name);
                  */
             }
-
-
         }
 
         [HttpGet]
@@ -122,11 +118,47 @@ namespace TaskR.Controllers
             }
             return View();
         }
+
         [HttpGet]
         public IActionResult TDLCreate()
         {
             //Todo
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> TDLDelete(int id)
+        {
+            var result = await _toDoListService.DeleteToDoListByIdAsync(id);
+            if (result == 1)
+            {
+                TempData["DeleteMessage"] = "Eintrag gelöscht!";
+                return RedirectToAction(nameof(Index));
+            }
+            else if(result > 1)
+            {
+                TempData["DeleteMessage"] = $"Liste und verknüpfte Aufgaben gelöscht!";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["DeleteError"] = "Löschen fehlgeschlagen!";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> TaskDelete(int id, int listID)
+        {
+            var result = await _toDoListService.DeleteTaskByIdAsync(id);
+            if (result == 1)
+            {
+                TempData["DeleteMessage"] = "Aufgabe gelöscht!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
+            else
+            {
+                TempData["DeleteError"] = "Löschen fehlgeschlagen!";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
     }

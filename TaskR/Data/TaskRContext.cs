@@ -100,20 +100,17 @@ public partial class TaskRContext : DbContext
 
             entity.HasOne(d => d.ToDoList).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.ToDoListId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Task__ToDoListId__403A8C7D");
+                .HasConstraintName("FK__Task__ToDoListId__73BA3083");
 
             entity.HasMany(d => d.Tags).WithMany(p => p.Tasks)
                 .UsingEntity<Dictionary<string, object>>(
                     "TaskTag",
                     r => r.HasOne<Tag>().WithMany()
                         .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__TaskTags__TagsId__45F365D3"),
+                        .HasConstraintName("FK__TaskTags__TagsId__6FE99F9F"),
                     l => l.HasOne<Task>().WithMany()
                         .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__TaskTags__TaskId__44FF419A"),
+                        .HasConstraintName("FK__TaskTags__TaskId__70DDC3D8"),
                     j =>
                     {
                         j.HasKey("TaskId", "TagsId").HasName("PK__TaskTags__A12A5F0ED1FB9409");

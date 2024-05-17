@@ -73,10 +73,10 @@ namespace TaskR.Services
         {
             return await _ctx.Tags.ToListAsync();
         }
-        internal  List<SelectListItem> GetTagsSelectList(List<Tag> tasks)
+        internal List<SelectListItem> GetTagsSelectList(List<Tag> tasks)
         {
             var list = new List<SelectListItem>();
-            foreach(var task in tasks)
+            foreach (var task in tasks)
             {
                 list.Add(new SelectListItem(task.Name, task.Id.ToString()));
             }
@@ -85,13 +85,33 @@ namespace TaskR.Services
 
         internal async Task<List<Tag>> GetTagsByIntArrayAsync(int[] selectedTagIds)
         {
-            return await _ctx.Tags.Where(o=>selectedTagIds.Contains(o.Id)).ToListAsync();
+            return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
         }
 
         internal async System.Threading.Tasks.Task CreateNewTaskItemAsync(Data.Task task)
         {
             await _ctx.Tasks.AddAsync(task);
             await _ctx.SaveChangesAsync();
+        }
+
+        internal async System.Threading.Tasks.Task<int> DeleteToDoListByIdAsync(int id)
+        {
+            var tdl = await GetToDoListByIdAsync(id);
+            _ctx.ToDoLists.Remove(tdl);
+            return await _ctx.SaveChangesAsync(true);
+        }
+
+        internal async Task<int> DeleteTaskByIdAsync(int id)
+        {
+            var task = await GetTaskByIdAsync(id) ?? new Data.Task();
+
+            _ctx.Tasks.Remove(task);
+            return await _ctx.SaveChangesAsync(true);
+        }
+
+        private async Task<Data.Task?> GetTaskByIdAsync(int id)
+        {
+            return await _ctx.Tasks.Where(o=>o.Id == id).Include(o=>o.Tags).SingleOrDefaultAsync();
         }
     }
 }
