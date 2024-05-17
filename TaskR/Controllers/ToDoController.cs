@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Collections.Generic;
 using System.Security.Claims;
 using TaskR.Models;
@@ -130,7 +131,17 @@ namespace TaskR.Controllers
                     TempData["ErrorMessage"] = "Name existiert bereits";
                     return View();
                 }
-                return RedirectToAction(nameof(Index));
+                int id = await _toDoListService.GetListIdAsync(userId, vm.Name);
+                if (id < 1)
+                {
+                    TempData["ErrorMessage"] = "Redirect failed";
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+                }
+                //return RedirectToAction(nameof(Index));
             }
             return View();
         }

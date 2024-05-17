@@ -113,5 +113,12 @@ namespace TaskR.Services
         {
             return await _ctx.Tasks.Where(o=>o.Id == id).Include(o=>o.Tags).SingleOrDefaultAsync();
         }
+
+        internal async Task<int> GetListIdAsync(int userId, string name)
+        {
+            var list = await _ctx.ToDoLists.Where(o=>o.AppUserId==userId & o.Name==name).SingleOrDefaultAsync();
+
+            return list?.Id ?? 0;
+        }
     }
 }
