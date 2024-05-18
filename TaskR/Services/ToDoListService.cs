@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using TaskR.Data;
 
@@ -71,11 +74,11 @@ namespace TaskR.Services
         }
         internal async Task<List<Tag>> GetGlobalTagsAsync()
         {
-            return await _ctx.Tags.Where(o=>o.AppUser == null).ToListAsync();
+            return await _ctx.Tags.Where(o => o.AppUser == null).ToListAsync();
         }
         internal async Task<List<Tag>> GetUserTagsAsync(int id)
         {
-            return await _ctx.Tags.Where(o=>o.AppUserId == id).ToListAsync();
+            return await _ctx.Tags.Where(o => o.AppUserId == id).ToListAsync();
         }
         internal List<SelectListItem> GetTagsSelectList(List<Tag> tasks)
         {
@@ -113,16 +116,63 @@ namespace TaskR.Services
             return await _ctx.SaveChangesAsync(true);
         }
 
-        private async Task<Data.Task?> GetTaskByIdAsync(int id)
+        public async Task<Data.Task?> GetTaskByIdAsync(int id)
         {
-            return await _ctx.Tasks.Where(o=>o.Id == id).Include(o=>o.Tags).SingleOrDefaultAsync();
+            return await _ctx.Tasks.Where(o => o.Id == id).Include(o => o.Tags).SingleOrDefaultAsync();
         }
 
         internal async Task<int> GetListIdAsync(int userId, string name)
         {
-            var list = await _ctx.ToDoLists.Where(o=>o.AppUserId==userId & o.Name==name).SingleOrDefaultAsync();
+            var list = await _ctx.ToDoLists.Where(o => o.AppUserId == userId & o.Name == name).SingleOrDefaultAsync();
 
             return list?.Id ?? 0;
+        }
+        internal List<Data.Task> GetFilteredToDoList(ICollection<Data.Task> tasks, TaskFilter filter, string textquery)
+        {
+            Func<Data.Task, bool> func;
+            switch (filter)
+            {
+                case TaskFilter.Urgent:
+                    func = FilterUrgent;
+                    break;
+
+                case TaskFilter.Open:
+                    func = FilterOpen;
+                    break;
+
+                case TaskFilter.Closed:
+                    func = FilterClosed;
+                    break;
+
+                default:
+                    func = (t) => true;
+                    break;
+            }
+
+            //var filteredTasks = wholeList.Tasks.Where((t) => func(t));
+            var filteredTasks = tasks.Where(func);
+            if (textquery.IsNullOrEmpty())
+                return filteredTasks.ToList();
+
+            var filteredAndQueriedTasks = filteredTasks.Where(t => t.Descripton.Contains(textquery));
+            return filteredAndQueriedTasks.ToList();
+        }
+
+        private static Func<Data.Task, bool> FilterUrgent => (t) => t.IsUrgent();
+        private static Func<Data.Task, bool> FilterOpen => (t) => !t.IsCompleted;
+        private static Func<Data.Task, bool> FilterClosed => (t) => t.IsCompleted;
+
+
+        public enum TaskFilter
+        {
+            [Display(Name = "Kein Filter")]
+            None = 0,
+            [Display(Name = "Nur dringende")]
+            Urgent = 01,
+            [Display(Name = "Nur offene")]
+            Open = 02,
+            [Display(Name = "Nur erledigte")]
+            Closed = 03,
         }
     }
 }

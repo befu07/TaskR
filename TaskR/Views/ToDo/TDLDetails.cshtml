@@ -1,7 +1,39 @@
-﻿@model TDLDetailsVm
+﻿@using static TaskR.Services.ToDoListService
+@model TDLDetailsVm
 
 <h2>Tasks für Liste: @Model.Name</h2>
 <h6><a href="/ToDo/Index">Zurück zu Übersicht</a></h6>
+
+<h4>Filtern & Suchen</h4>
+<form action="/ToDo/TDLDetails/@Model.Id" method="post" class="m-2">
+    <div class="row m-3">
+        <div class="col-1">
+            <label class="col-2">
+                Filter:
+            </label>
+        </div>
+        <div class="col-2">
+            <select asp-for="Filter"
+                    class="form-control"
+                    asp-items="Html.GetEnumSelectList<TaskFilter>()">
+                @* <option>Select Filter ...</option> *@
+            </select>
+        </div>
+        <div class="col-1">
+            <label class="col-2">
+                Suchtext:
+            </label>
+        </div>
+        <div class="col-2">
+            <input type="text" name="Query" class="form-control col-2" value="@Model.Query" />
+        </div>
+    </div>
+    <div class="row m-3">
+        <div class="col-2">
+            <input type="submit" value="Filter anwenden"/>
+        </div>
+    </div>
+</form>
 <table class="table-success table">
     <thead>
         <tr>
@@ -21,7 +53,7 @@
         @foreach (var item in Model.Tasks)
         {
             bool isUrgent = item.IsUrgent();
-            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger" ;
+            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger";
             @* string stlyestring = isUrgent ? @"style=background-color:lightpink" : ""; *@
             @* var urgentstyle = isUrgent ? "style='background-color:lightpink'" : String.Empty; *@
             <tr @stlyestring>
@@ -40,13 +72,13 @@
                     }
                 </td>
                 <td>
-                    @* 
-                    <a>Abschließen</a><br />
-                    <a>Details</a><br />
-                    <a>Löschen</a><br />
-                    *@
+                    @*
+                <a>Abschließen</a><br />
+                <a>Details</a><br />
+                <a>Löschen</a><br />
+                *@
 
-                    <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info" >Edit</a>
+                    <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info">Edit</a>
                     <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
                 </td>
             </tr>
