@@ -1,10 +1,10 @@
-﻿
-
-USE master
+﻿USE master
 GO
 
+--ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE GO
 Drop DATABASE if exists TaskR
 GO
+
 
 CREATE DATABASE TaskR
 GO
@@ -29,6 +29,7 @@ CREATE TABLE AppUser
 	PasswordHash BINARY(32) NOT NULL,
 	Salt BINARY(32) NOT NULL,
 	RegisteredOn DATETIME NOT NULL,
+	Email VARCHAR(100) UNIQUE,
 	AppRoleId INT NOT NULL DEFAULT(2) REFERENCES AppRole(Id)
 )
 GO
@@ -44,12 +45,11 @@ CREATE TABLE Task
 (
 	Id INT PRIMARY KEY IDENTITY,
 	[Descripton] VARCHAR(100) NOT NULL,
-	ToDoListId INT NOT NULL FOREIGN KEY REFERENCES ToDoList,
+	ToDoListId INT NOT NULL FOREIGN KEY REFERENCES ToDoList ON DELETE CASCADE,
 	IsCompleted BIT NOT NULL,
 	CreatedOn DATETIME NOT NULL,
-	CompletedOn DATETIME NOT NULL,
-	PricePerPerson DECIMAL(9,2) NULL,
-	Deadline DATETIME NOT NULL, 
+	CompletedOn DATETIME,
+	Deadline DATETIME, 
 	Priority INT 
 )
 CREATE TABLE Tags
@@ -61,21 +61,17 @@ CREATE TABLE Tags
 
 CREATE TABLE TaskTags
 (
-	TaskId INT NOT NULL FOREIGN KEY REFERENCES Task,
-	TagsId INT NOT NULL FOREIGN KEY REFERENCES Tags,
-	  PRIMARY KEY (TaskId,TagsId)
+	TaskId INT NOT NULL FOREIGN KEY REFERENCES Task ON DELETE CASCADE,
+	TagsId INT NOT NULL FOREIGN KEY REFERENCES Tags ON DELETE CASCADE,
+	PRIMARY KEY (TaskId,TagsId)
 )
 
-go
-Alter Table AppUser Add Email varchar(100)
-go
+--go
+--Alter Table AppUser Add Email varchar(100)
+--go
 
-ALTER TABLE AppUser ADD CONSTRAINT UQ_Email UNIQUE (Email)
-go
-
-ALTER TABLE Task 
-drop Column PricePerPerson
-go
+--ALTER TABLE AppUser ADD CONSTRAINT UQ_Email UNIQUE (Email)
+--go
 
 
 ALTER TABLE ToDoList
@@ -87,10 +83,6 @@ Add Constraint Fk_ToDoList_AppUserId
 foreign key (AppUserId) References AppUser(Id)  
 go
 
-alter TABLE Task
-	alter column Deadline DATETIME
-
-go
 
 Insert into Tags Values 
 	('Chores', 'EEFF88'),
