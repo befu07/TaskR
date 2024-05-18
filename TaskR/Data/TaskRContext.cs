@@ -32,11 +32,11 @@ public partial class TaskRContext : DbContext
     {
         modelBuilder.Entity<AppRole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AppRole__3214EC0708C3A344");
+            entity.HasKey(e => e.Id).HasName("PK__AppRole__3214EC07BD83BE43");
 
             entity.ToTable("AppRole");
 
-            entity.HasIndex(e => e.RoleName, "UQ__AppRole__8A2B6160AB5FBA69").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__AppRole__8A2B6160C0E1D4B9").IsUnique();
 
             entity.Property(e => e.RoleName)
                 .HasMaxLength(20)
@@ -45,11 +45,11 @@ public partial class TaskRContext : DbContext
 
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AppUser__3214EC07C1FFFBFA");
+            entity.HasKey(e => e.Id).HasName("PK__AppUser__3214EC07B7791F04");
 
             entity.ToTable("AppUser");
 
-            entity.HasIndex(e => e.Email, "UQ__AppUser__A9D1053472BB8E40").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__AppUser__A9D10534A2C76CE7").IsUnique();
 
             entity.Property(e => e.AppRoleId).HasDefaultValue(2);
             entity.Property(e => e.Email)
@@ -74,7 +74,7 @@ public partial class TaskRContext : DbContext
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tags__3214EC07884D2F3F");
+            entity.HasKey(e => e.Id).HasName("PK__Tags__3214EC07D5E6AE33");
 
             entity.Property(e => e.HexColor)
                 .HasMaxLength(6)
@@ -83,11 +83,15 @@ public partial class TaskRContext : DbContext
             entity.Property(e => e.Name)
                 .HasMaxLength(10)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.AppUser).WithMany(p => p.Tags)
+                .HasForeignKey(d => d.AppUserId)
+                .HasConstraintName("Fk_Tags_AppUserId");
         });
 
         modelBuilder.Entity<Task>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Task__3214EC07298B9E69");
+            entity.HasKey(e => e.Id).HasName("PK__Task__3214EC07D6A7F378");
 
             entity.ToTable("Task");
 
@@ -107,20 +111,20 @@ public partial class TaskRContext : DbContext
                     "TaskTag",
                     r => r.HasOne<Tag>().WithMany()
                         .HasForeignKey("TagsId")
-                        .HasConstraintName("FK__TaskTags__TagsId__34C8D9D1"),
+                        .HasConstraintName("FK__TaskTags__TagsId__35BCFE0A"),
                     l => l.HasOne<Task>().WithMany()
                         .HasForeignKey("TaskId")
-                        .HasConstraintName("FK__TaskTags__TaskId__33D4B598"),
+                        .HasConstraintName("FK__TaskTags__TaskId__34C8D9D1"),
                     j =>
                     {
-                        j.HasKey("TaskId", "TagsId").HasName("PK__TaskTags__A12A5F0E2666E164");
+                        j.HasKey("TaskId", "TagsId").HasName("PK__TaskTags__A12A5F0E5841B2A8");
                         j.ToTable("TaskTags");
                     });
         });
 
         modelBuilder.Entity<ToDoList>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ToDoList__3214EC078391E454");
+            entity.HasKey(e => e.Id).HasName("PK__ToDoList__3214EC0767E76E54");
 
             entity.ToTable("ToDoList");
 

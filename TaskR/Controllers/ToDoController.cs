@@ -58,15 +58,18 @@ namespace TaskR.Controllers
             var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
             var priorities = _toDoListService.GetPrioritySelectList();
-            var tags = await _toDoListService.GetAvailableTagsAsync();
+            var globaltags = await _toDoListService.GetGlobalTagsAsync();
+            var usertags = await _toDoListService.GetUserTagsAsync(userId);
+
+            var vmtags = globaltags.Concat(usertags).ToList();
             var vm = new CreateTaskVm
             {
-                MSL_Tags = new MultiSelectList(tags, "Id", "Name"),
+                MSL_Tags = new MultiSelectList(vmtags, "Id", "Name"),
                 ToDoListId = id,
-                AvailableTags = tags,
+                AvailableTags = vmtags,
                 SelectListItems_ToDoList = tdlSelectList,
                 SelectListItems_Priorities = priorities,
-                SelectListItems_Tags = _toDoListService.GetTagsSelectList(tags)
+                SelectListItems_Tags = _toDoListService.GetTagsSelectList(vmtags)
             };
             return View(vm);
         }
