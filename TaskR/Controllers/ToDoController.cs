@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Collections.Generic;
 using System.Security.Claims;
 using TaskR.Models;
@@ -123,6 +124,27 @@ namespace TaskR.Controllers
         }
 
         [HttpPost]
+        public async Task<IActionResult> TDLDetails(TDLDetailsVm form)
+        {
+            var toDoList = await _toDoListService.GetToDoListByIdAsync(form.Id);
+            if (toDoList == null) { return RedirectToAction(nameof(Index)); }
+
+            // Filter anwenden
+            var filter = form.Filter;
+            var textquery = form.Query;
+            var filteredTasks = _toDoListService.GetFilteredToDoList(toDoList.Tasks, filter, textquery);
+            var vm = new TDLDetailsVm
+            {
+                Id = toDoList.Id,
+                Name = toDoList.Name,
+                Tasks = filteredTasks,
+                Filter = form.Filter,
+                Query = form.Query
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> TDLCreate(ToDoCreateVm vm)
         {
             if (ModelState.IsValid)
@@ -193,7 +215,7 @@ namespace TaskR.Controllers
         [HttpGet]
         public async Task<IActionResult> TaskDetails(int id)
         {
-            var result = await _toDoListService.DeleteTaskByIdAsync(id);
+            var result = await _toDoListService.GetTaskByIdAsync(id);
             return View(result);
         }
 

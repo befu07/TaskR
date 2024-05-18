@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using TaskR.Data;
 
 namespace TaskR.Services
@@ -93,5 +94,6 @@ namespace TaskR.Services
         {
             return await _ctx.AppUsers.Include(o => o.AppRole).ToListAsync();
         }
+
     }
 }
