@@ -21,5 +21,7 @@ public partial class AppUser
 
     public virtual AppRole AppRole { get; set; } = null!;
 
+    public virtual ICollection<Tag> Tags { get; set; } = new List<Tag>();
+
     public virtual ICollection<ToDoList> ToDoLists { get; set; } = new List<ToDoList>();
 }

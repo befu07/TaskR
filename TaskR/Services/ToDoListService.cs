@@ -69,9 +69,13 @@ namespace TaskR.Services
                 new SelectListItem("Keine","5")
             };
         }
-        internal async Task<List<Tag>> GetAvailableTagsAsync()
+        internal async Task<List<Tag>> GetGlobalTagsAsync()
         {
-            return await _ctx.Tags.ToListAsync();
+            return await _ctx.Tags.Where(o=>o.AppUser == null).ToListAsync();
+        }
+        internal async Task<List<Tag>> GetUserTagsAsync(int id)
+        {
+            return await _ctx.Tags.Where(o=>o.AppUserId == id).ToListAsync();
         }
         internal List<SelectListItem> GetTagsSelectList(List<Tag> tasks)
         {

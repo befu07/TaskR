@@ -1,10 +1,10 @@
 ﻿USE master
 GO
 
-ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE GO
+ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE 
+GO
 Drop DATABASE if exists TaskR
 GO
-
 
 CREATE DATABASE TaskR
 GO
@@ -58,8 +58,11 @@ CREATE TABLE Task
 CREATE TABLE Tags
 (
 	Id INT PRIMARY KEY IDENTITY,
+	AppUserId INT,
 	Name VARCHAR(10) NOT NULL,
-	HexColor CHAR(6) NOT NULL
+	HexColor CHAR(6) NOT NULL,
+	Constraint Fk_Tags_AppUserId
+		foreign key (AppUserId) References AppUser(Id)
 )
 
 CREATE TABLE TaskTags
@@ -87,7 +90,7 @@ CREATE TABLE TaskTags
 --go
 
 
-Insert into Tags Values 
+Insert into Tags(Name, HexColor) Values 
 	('Chores', 'EEFF88'),
 	('Finance', '881122'),
 	('Hobbies', '555555'),
