@@ -15,9 +15,9 @@ public partial class AppUser
 
     public DateTime RegisteredOn { get; set; }
 
-    public int AppRoleId { get; set; }
-
     public string? Email { get; set; }
+
+    public int AppRoleId { get; set; }
 
     public virtual AppRole AppRole { get; set; } = null!;
 

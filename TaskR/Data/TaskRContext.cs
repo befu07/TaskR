@@ -32,11 +32,11 @@ public partial class TaskRContext : DbContext
     {
         modelBuilder.Entity<AppRole>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AppRole__3214EC0770D0DD6D");
+            entity.HasKey(e => e.Id).HasName("PK__AppRole__3214EC0744C92138");
 
             entity.ToTable("AppRole");
 
-            entity.HasIndex(e => e.RoleName, "UQ__AppRole__8A2B61601AAF6D9F").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__AppRole__8A2B61605D69DCAE").IsUnique();
 
             entity.Property(e => e.RoleName)
                 .HasMaxLength(20)
@@ -45,11 +45,11 @@ public partial class TaskRContext : DbContext
 
         modelBuilder.Entity<AppUser>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__AppUser__3214EC07D2191B88");
+            entity.HasKey(e => e.Id).HasName("PK__AppUser__3214EC0735E16649");
 
             entity.ToTable("AppUser");
 
-            entity.HasIndex(e => e.Email, "UQ_Email").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__AppUser__A9D10534E31ADBF1").IsUnique();
 
             entity.Property(e => e.AppRoleId).HasDefaultValue(2);
             entity.Property(e => e.Email)
@@ -69,12 +69,12 @@ public partial class TaskRContext : DbContext
             entity.HasOne(d => d.AppRole).WithMany(p => p.AppUsers)
                 .HasForeignKey(d => d.AppRoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__AppUser__AppRole__3B75D760");
+                .HasConstraintName("FK__AppUser__AppRole__29572725");
         });
 
         modelBuilder.Entity<Tag>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Tags__3214EC07841CAC78");
+            entity.HasKey(e => e.Id).HasName("PK__Tags__3214EC074E0CE5B8");
 
             entity.Property(e => e.HexColor)
                 .HasMaxLength(6)
@@ -87,7 +87,7 @@ public partial class TaskRContext : DbContext
 
         modelBuilder.Entity<Task>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Task__3214EC07D6391D38");
+            entity.HasKey(e => e.Id).HasName("PK__Task__3214EC07F79D3C04");
 
             entity.ToTable("Task");
 
@@ -100,27 +100,27 @@ public partial class TaskRContext : DbContext
 
             entity.HasOne(d => d.ToDoList).WithMany(p => p.Tasks)
                 .HasForeignKey(d => d.ToDoListId)
-                .HasConstraintName("FK__Task__ToDoListId__73BA3083");
+                .HasConstraintName("FK__Task__ToDoListId__2E1BDC42");
 
             entity.HasMany(d => d.Tags).WithMany(p => p.Tasks)
                 .UsingEntity<Dictionary<string, object>>(
                     "TaskTag",
                     r => r.HasOne<Tag>().WithMany()
                         .HasForeignKey("TagsId")
-                        .HasConstraintName("FK__TaskTags__TagsId__6FE99F9F"),
+                        .HasConstraintName("FK__TaskTags__TagsId__33D4B598"),
                     l => l.HasOne<Task>().WithMany()
                         .HasForeignKey("TaskId")
-                        .HasConstraintName("FK__TaskTags__TaskId__70DDC3D8"),
+                        .HasConstraintName("FK__TaskTags__TaskId__32E0915F"),
                     j =>
                     {
-                        j.HasKey("TaskId", "TagsId").HasName("PK__TaskTags__A12A5F0ED1FB9409");
+                        j.HasKey("TaskId", "TagsId").HasName("PK__TaskTags__A12A5F0E4553EFC8");
                         j.ToTable("TaskTags");
                     });
         });
 
         modelBuilder.Entity<ToDoList>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__ToDoList__3214EC07E720A008");
+            entity.HasKey(e => e.Id).HasName("PK__ToDoList__3214EC078B799103");
 
             entity.ToTable("ToDoList");
 
