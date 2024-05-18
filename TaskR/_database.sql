@@ -1,7 +1,7 @@
 ﻿USE master
 GO
 
---ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE GO
+ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE GO
 Drop DATABASE if exists TaskR
 GO
 
@@ -38,7 +38,10 @@ GO
 CREATE TABLE ToDoList
 (
 	Id INT PRIMARY KEY IDENTITY,
-	Name VARCHAR(30) NOT NULL
+	Name VARCHAR(30) NOT NULL,
+	AppUserId int NOT NULL,
+	Constraint Fk_ToDoList_AppUserId
+		foreign key (AppUserId) References AppUser(Id)
 )
 
 CREATE TABLE Task
@@ -74,42 +77,21 @@ CREATE TABLE TaskTags
 --go
 
 
-ALTER TABLE ToDoList
-Add AppUserId int 
-go
+--ALTER TABLE ToDoList
+--Add AppUserId int 
+--go
 
-ALTER TABLE ToDoList
-Add Constraint Fk_ToDoList_AppUserId
-foreign key (AppUserId) References AppUser(Id)  
-go
+--ALTER TABLE ToDoList
+--Add Constraint Fk_ToDoList_AppUserId
+--foreign key (AppUserId) References AppUser(Id)  
+--go
 
 
 Insert into Tags Values 
 	('Chores', 'EEFF88'),
-	('Prdctvty', '881122'),
-	('Mintnnce', '555555'),
-	('Educatin', '3399FF')
+	('Finance', '881122'),
+	('Hobbies', '555555'),
+	('Learning', '3399FF')
 
 go
-
-
--- Löschweitergabe für Zwischentabelle ( wenn Task gelöscht wird) 
--- FK-Constraints wurden vorher gedroppt
-ALTER TABLE [dbo].[TaskTags]  WITH CHECK ADD FOREIGN KEY([TagsId])
-REFERENCES [dbo].[Tags] ([Id])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[TaskTags]  WITH CHECK ADD FOREIGN KEY([TaskId])
-REFERENCES [dbo].[Task] ([Id])
-ON DELETE CASCADE
-GO
--- Löschweitergabe für Task ( wenn Liste gelöscht wird) 
--- FK-Constraint wurde vorher gedroppt
-ALTER TABLE [dbo].[Task]  WITH CHECK ADD FOREIGN KEY([ToDoListId])
-REFERENCES [dbo].[ToDoList] ([Id])
-ON DELETE CASCADE
-GO
-
-
 
