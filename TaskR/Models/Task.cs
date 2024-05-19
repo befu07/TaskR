@@ -4,8 +4,12 @@
     {
         public bool IsUrgent ()
         {
-            //Todo 
-            return Random.Shared.NextSingle() > 0.5;
+            if (IsCompleted)
+                return false;
+            if (Deadline is null)
+                return false;
+            return DateTime.Now >= Deadline.Value.AddDays(-7);
+            //return Random.Shared.NextSingle() > 0.5;
         }
     }
 }

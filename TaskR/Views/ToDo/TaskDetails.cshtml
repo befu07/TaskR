@@ -1,2 +1,77 @@
 ﻿@model TaskDetailsVm
 
+<form action="/ToDo/TaskDetails" method="post">
+
+    <input name="Id" hidden value="@Model.Id" />
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            ToDoList:
+        </div>
+        <div class="col-md-3">
+            <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            Description:
+        </div>
+        <div class="col-md-3">
+            <input type="text" name="Descripton" value="@Model.Descripton" />
+        </div>
+        <div class="col-md-12">
+            <span asp-validation-for="Descripton" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            IsCompleted:
+        </div>
+        <div class="col-md-3">
+            @{
+                var statusString = @Model.IsCompleted ? "on" : "off";
+            }
+            <input type="checkbox" name="IsCompletedString" checked />
+        </div>
+    </div>
+    @if (Model.IsCompleted & Model.CompletedOn.HasValue)
+    {
+        <div class="row my-3">
+            <div class="col-md-3">
+                CompletedOn:
+            </div>
+            <div class="col-md-3">
+                <span>@Model.CompletedOn!.Value.ToString("G")</span>
+            </div>
+        </div>
+
+    }
+    <div class="row my-3">
+        <div class="col-md-3">
+            CreatedOn:
+        </div>
+        <div class="col-md-3">
+            <span>@Model.CreatedOn.ToString("G")</span>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            Deadline:
+        </div>
+        <div class="col-md-3">
+            <input type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
+        </div>
+        <div class="col-md-12">
+            <span asp-validation-for="Deadline" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-md-3">
+            <input type="submit" />
+        </div>
+    </div>
+</form>

@@ -118,7 +118,10 @@ namespace TaskR.Services
 
         public async Task<Data.Task?> GetTaskByIdAsync(int id)
         {
-            return await _ctx.Tasks.Where(o => o.Id == id).Include(o => o.Tags).SingleOrDefaultAsync();
+            return await _ctx.Tasks.Where(o => o.Id == id)
+                .Include(o => o.Tags)
+                .Include(o => o.ToDoList)
+                .SingleOrDefaultAsync();
         }
 
         internal async Task<int> GetListIdAsync(int userId, string name)

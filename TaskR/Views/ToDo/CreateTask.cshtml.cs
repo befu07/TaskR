@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using TaskR.Data;
 
@@ -13,6 +14,8 @@ public class CreateTaskVm
 
     public DateTime CreatedOn { get; set; }
     //public DateTime CompletedOn { get; set; }
+
+    [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:yyyy-MM-dd}")]
     public DateTime? Deadline { get; set; }
 
     public int Priority { get; set; } = 3;
