@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Collections.Generic;
 using System.Security.Claims;
+using TaskR.Data;
+using TaskR.Helper;
 using TaskR.Models;
 using TaskR.Services;
 
@@ -216,7 +219,52 @@ namespace TaskR.Controllers
         public async Task<IActionResult> TaskDetails(int id)
         {
             var result = await _toDoListService.GetTaskByIdAsync(id);
-            return View(result);
+            if (result == null)
+                return RedirectToAction(nameof(Index));
+
+            var userId = result.ToDoList.AppUserId;
+            var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
+            var vm = new TaskDetailsVm
+            {
+                Id = id,
+                Descripton = result.Descripton,
+                ToDoListId = result.ToDoListId,
+                SelectListItems_ToDoList = tdlSelectList,
+                IsCompleted = result.IsCompleted,
+                CreatedOn = result.CreatedOn,
+                CompletedOn = result.CompletedOn,
+                Deadline = result.Deadline,
+                DeadlineInputString = result.Deadline.ToInputString(),
+                Priority = result.Priority,
+
+
+            };
+
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> TaskDetails(TaskDetailsVm vm)
+        {
+            if (ModelState.IsValid)
+            {
+                if(vm.IsCompletedString == "on")
+                {
+                    vm.IsCompleted = true;
+                }
+                //Todo Update Entry
+                Data.Task task = new()
+                {
+
+                };
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+
+
+                //Todo Selectlisten
+                return View(vm);
+            }
         }
 
     }
