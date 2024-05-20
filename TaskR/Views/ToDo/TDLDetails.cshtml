@@ -30,15 +30,15 @@
     </div>
     <div class="row m-3">
         <div class="col-2">
-            <input type="submit" value="Filter anwenden"/>
+            <input type="submit" value="Filter anwenden" />
         </div>
     </div>
 </form>
 <table class="table-success table">
     <thead>
         <tr>
+            <th scope="col" style="width:70px"></th>
             <th scope="col">Descripton</th>
-            <th scope="col">Urgent?</th>
             <th scope="col">IsCompleted</th>
             <th scope="col">CreatedOn</th>
             @* <th scope="col">CompletedOn</th> *@
@@ -53,14 +53,20 @@
         @foreach (var item in Model.Tasks)
         {
             bool isUrgent = item.IsUrgent();
-            string stlyestring = !isUrgent ? String.Empty : @"class=table-danger";
+            string urgentFlag = String.Empty;
+            string stlyestring = String.Empty;
+            if (isUrgent)
+            {
+                urgentFlag = @"!!! ";
+                stlyestring = @"class=table-danger";
+            };
             @* string stlyestring = isUrgent ? @"style=background-color:lightpink" : ""; *@
             @* var urgentstyle = isUrgent ? "style='background-color:lightpink'" : String.Empty; *@
             <tr @stlyestring>
-                <th scope="row">@item.Description</th>
-                <th scope="row">@isUrgent</th>
+                <td scope="row">@urgentFlag</td>
+                <td scope="row">@item.Description</td>
                 <td>@item.IsCompleted</td>
-                <td>@item.CreatedOn</td>
+                <td>@item.CreatedOn.ToString("g")</td>
                 @* <td>@item.CompletedOn</td> *@
                 <td>@item.Deadline?.ToString("d")</td>
                 <td>@item.Priority</td>
