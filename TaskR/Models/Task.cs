@@ -1,6 +1,6 @@
 ﻿namespace TaskR.Data
 {
-    public partial class Task
+    public partial class TaskItem
     {
         public bool IsUrgent ()
         {

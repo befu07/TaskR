@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace TaskR.Data;
 
-public partial class Task
+public partial class TaskItem
 {
     public int Id { get; set; }
 
-    public string Descripton { get; set; } = null!;
+    public string Description { get; set; } = null!;
 
     public int ToDoListId { get; set; }
 

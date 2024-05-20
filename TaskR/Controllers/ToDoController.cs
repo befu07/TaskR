@@ -83,10 +83,10 @@ namespace TaskR.Controllers
             if (ModelState.IsValid)
             {
                 var selectedTags = await _toDoListService.GetTagsByIntArrayAsync(vm.SelectedTagIds);
-                TaskR.Data.Task task = new TaskR.Data.Task
+                TaskItem task = new TaskItem
                 {
                     ToDoListId = vm.ToDoListId,
-                    Descripton = vm.Descripton,
+                    Description = vm.Descripton,
                     Deadline = vm.Deadline,
                     IsCompleted = false,
                     CreatedOn = DateTime.Now,
@@ -121,7 +121,7 @@ namespace TaskR.Controllers
             {
                 Id = list.Id,
                 Name = list.Name,
-                Tasks = list.Tasks //
+                Tasks = list.TaskItems
             };
             return View(vm);
         }
@@ -135,7 +135,7 @@ namespace TaskR.Controllers
             // Filter anwenden
             var filter = form.Filter;
             var textquery = form.Query;
-            var filteredTasks = _toDoListService.GetFilteredToDoList(toDoList.Tasks, filter, textquery);
+            var filteredTasks = _toDoListService.GetFilteredToDoList(toDoList.TaskItems, filter, textquery);
             var vm = new TDLDetailsVm
             {
                 Id = toDoList.Id,
@@ -227,7 +227,7 @@ namespace TaskR.Controllers
             var vm = new TaskDetailsVm
             {
                 Id = id,
-                Descripton = result.Descripton,
+                Descripton = result.Description,
                 ToDoListId = result.ToDoListId,
                 SelectListItems_ToDoList = tdlSelectList,
                 IsCompleted = result.IsCompleted,
@@ -252,7 +252,7 @@ namespace TaskR.Controllers
                     vm.IsCompleted = true;
                 }
                 //Todo Update Entry
-                Data.Task task = new()
+                TaskItem task = new()
                 {
 
                 };
