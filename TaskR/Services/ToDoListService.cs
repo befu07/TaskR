@@ -41,12 +41,12 @@ namespace TaskR.Services
 
         internal async Task<List<ToDoList>> GetToDoListsByUserIdAsync(int userId)
         {
-            return (await _ctx.ToDoLists.Include(o => o.Tasks).Where(x => x.AppUserId == userId).ToListAsync());
+            return (await _ctx.ToDoLists.Include(o => o.TaskItems).Where(x => x.AppUserId == userId).ToListAsync());
         }
 
         internal async Task<ToDoList?> GetToDoListByIdAsync(int id)
         {
-            return await _ctx.ToDoLists.Where(x => x.Id == id).Include(o => o.Tasks).ThenInclude(o => o.Tags).FirstOrDefaultAsync();
+            return await _ctx.ToDoLists.Where(x => x.Id == id).Include(o => o.TaskItems).ThenInclude(o => o.Tags).FirstOrDefaultAsync();
             //return await _ctx.ToDoLists.FindAsync(id);
         }
         internal async Task<List<SelectListItem>> GetTDLSelectListByUserIdAsync(int id)
@@ -95,9 +95,9 @@ namespace TaskR.Services
             return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
         }
 
-        internal async System.Threading.Tasks.Task CreateNewTaskItemAsync(Data.Task task)
+        internal async System.Threading.Tasks.Task CreateNewTaskItemAsync(TaskItem task)
         {
-            await _ctx.Tasks.AddAsync(task);
+            await _ctx.TaskItems.AddAsync(task);
             await _ctx.SaveChangesAsync();
         }
 
@@ -110,15 +110,15 @@ namespace TaskR.Services
 
         internal async Task<int> DeleteTaskByIdAsync(int id)
         {
-            var task = await GetTaskByIdAsync(id) ?? new Data.Task();
+            var task = await GetTaskByIdAsync(id) ?? new TaskItem();
 
-            _ctx.Tasks.Remove(task);
+            _ctx.TaskItems.Remove(task);
             return await _ctx.SaveChangesAsync(true);
         }
 
-        public async Task<Data.Task?> GetTaskByIdAsync(int id)
+        public async Task<TaskItem?> GetTaskByIdAsync(int id)
         {
-            return await _ctx.Tasks.Where(o => o.Id == id)
+            return await _ctx.TaskItems.Where(o => o.Id == id)
                 .Include(o => o.Tags)
                 .Include(o => o.ToDoList)
                 .SingleOrDefaultAsync();
@@ -130,9 +130,9 @@ namespace TaskR.Services
 
             return list?.Id ?? 0;
         }
-        internal List<Data.Task> GetFilteredToDoList(ICollection<Data.Task> tasks, TaskFilter filter, string textquery)
+        internal List<TaskItem> GetFilteredToDoList(ICollection<TaskItem> tasks, TaskFilter filter, string textquery)
         {
-            Func<Data.Task, bool> func;
+            Func<TaskItem, bool> func;
             switch (filter)
             {
                 case TaskFilter.Urgent:
@@ -157,13 +157,13 @@ namespace TaskR.Services
             if (textquery.IsNullOrEmpty())
                 return filteredTasks.ToList();
 
-            var filteredAndQueriedTasks = filteredTasks.Where(t => t.Descripton.Contains(textquery));
+            var filteredAndQueriedTasks = filteredTasks.Where(t => t.Description.Contains(textquery));
             return filteredAndQueriedTasks.ToList();
         }
 
-        private static Func<Data.Task, bool> FilterUrgent => (t) => t.IsUrgent();
-        private static Func<Data.Task, bool> FilterOpen => (t) => !t.IsCompleted;
-        private static Func<Data.Task, bool> FilterClosed => (t) => t.IsCompleted;
+        private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
+        private static Func<TaskItem, bool> FilterOpen => (t) => !t.IsCompleted;
+        private static Func<TaskItem, bool> FilterClosed => (t) => t.IsCompleted;
 
 
         public enum TaskFilter

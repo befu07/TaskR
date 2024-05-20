@@ -13,10 +13,10 @@
     <tbody>
         @foreach (var item in Model.ToDoLists)
         {
-            int openTasksCount = @item.Tasks.Where(o => !o.IsCompleted).Count();
+            int openTasksCount = @item.TaskItems.Where(o => !o.IsCompleted).Count();
             <tr>
                 <td style="width:200px">@item.Name</td>
-                <td style="width:200px">@item.Tasks.Count</td>
+                <td style="width:200px">@item.TaskItems.Count</td>
                 <td style="width:200px">@openTasksCount</td>
                 <td style="width:140px">
                     <a href="/ToDo/TDLDetails/@item.Id">Details</a>
