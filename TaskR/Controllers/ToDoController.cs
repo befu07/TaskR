@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using System.Collections.Generic;
 using System.Security.Claims;
@@ -62,18 +63,17 @@ namespace TaskR.Controllers
             var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
             var priorities = _toDoListService.GetPrioritySelectList();
+
             var globaltags = await _toDoListService.GetGlobalTagsAsync();
             var usertags = await _toDoListService.GetUserTagsAsync(userId);
-
             var vmtags = globaltags.Concat(usertags).ToList();
+
             var vm = new CreateTaskVm
             {
-                MSL_Tags = new MultiSelectList(vmtags, "Id", "Name"),
                 ToDoListId = id,
-                AvailableTags = vmtags,
+                MSL_Tags = new MultiSelectList(vmtags, "Id", "Name"),
                 SelectListItems_ToDoList = tdlSelectList,
                 SelectListItems_Priorities = priorities,
-                SelectListItems_Tags = _toDoListService.GetTagsSelectList(vmtags)
             };
             return View(vm);
         }
@@ -247,23 +247,61 @@ namespace TaskR.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(vm.IsCompletedString == "on")
+                TaskItem dbTask = await _toDoListService.GetTaskByIdAsync(vm.Id);
+                if (dbTask == null)
+                {
+                    // Todo Fehlermedlung
+                    return RedirectToAction(nameof(Index));
+                }
+
+                if (vm.IsCompletedString == "on")
                 {
                     vm.IsCompleted = true;
+                    if (!dbTask.IsCompleted)
+                    {
+                        dbTask.IsCompleted = true;
+                        dbTask.CompletedOn = DateTime.Now;
+                    }
                 }
                 //Todo Update Entry
-                TaskItem task = new()
-                {
-
-                };
+                dbTask.Id = vm.Id;
+                dbTask.ToDoListId = vm.ToDoListId;
+                dbTask.Description = vm.Descripton;
+                dbTask.IsCompleted = false;
+                dbTask.CreatedOn = vm.CreatedOn;
+                dbTask.CompletedOn = vm.CompletedOn;
+                dbTask.Deadline = vm.Deadline;
+                dbTask.Priority = vm.Priority;
+                //dbTask.Tags = selectedTags // TODO
                 return RedirectToAction(nameof(Index));
             }
             else
             {
+                var result = await _toDoListService.GetTaskByIdAsync(vm.Id);
+                if (result == null)
+                    return RedirectToAction(nameof(Index));
 
-
+                var userId = result.ToDoList.AppUserId;
+                var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
+                var errorvm = new TaskDetailsVm
+                {
+                    Id = vm.Id,
+                    Descripton = result.Description,
+                    ToDoListId = result.ToDoListId,
+                    SelectListItems_ToDoList = tdlSelectList,
+                    IsCompleted = result.IsCompleted,
+                    CreatedOn = result.CreatedOn,
+                    CompletedOn = result.CompletedOn,
+                    Deadline = result.Deadline,
+                    DeadlineInputString = result.Deadline.ToInputString(),
+                    Priority = result.Priority,
+                };
+                return View(errorvm);
+                //TempData["ErrorMessage"] = 
+                ModelState.AddModelError("Description", "blah");
+                return RedirectToAction(nameof(TaskDetails), routeValues: new { id = vm.Id }); // validation geht so nicht
                 //Todo Selectlisten
-                return View(vm);
+                //return View(nameof(TaskDetails), new {id=vm.Id});
             }
         }
 

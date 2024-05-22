@@ -7,13 +7,13 @@ namespace TaskR.Models;
 
 public class TaskDetailsVm
 {
-    public int Id { get; set; }
-    [Required] public int ToDoListId { get; set; }
-    public List<SelectListItem>? SelectListItems_ToDoList { get; set; } = new();
     [Required]
     [MaxLength(100)]
     public string Descripton { get; set; } = null!;
+    [Required] public int ToDoListId { get; set; }
     public bool IsCompleted { get; set; }
+    public int Id { get; set; }
+    public List<SelectListItem>? SelectListItems_ToDoList { get; set; } = new();
     public string IsCompletedString { get; set; } = null!;
     public DateTime CreatedOn { get; set; }
     public DateTime? CompletedOn { get; set; }

@@ -23,9 +23,9 @@ public class CreateTaskVm
     #region UI Properties
     public List<SelectListItem>? SelectListItems_Priorities { get; set; } = new();
     public List<SelectListItem>? SelectListItems_ToDoList { get; set; } = new();
-    public List<SelectListItem>? SelectListItems_Tags { get; set; } = new();
-    public List<Tag> AvailableTags { get; set; } = new();
-    public List<Tag> SelectedTags { get; set; } = new();
+    //public List<SelectListItem>? SelectListItems_Tags { get; set; } = new();
+    //public List<Tag> AvailableTags { get; set; } = new();
+    //public List<Tag> SelectedTags { get; set; } = new();
     public int[]? SelectedTagIds { get; set; }
     public MultiSelectList? MSL_Tags { get; set; }
     #endregion
