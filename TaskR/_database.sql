@@ -44,10 +44,10 @@ CREATE TABLE ToDoList
 		foreign key (AppUserId) References AppUser(Id)
 )
 
-CREATE TABLE Task
+CREATE TABLE TaskItem
 (
 	Id INT PRIMARY KEY IDENTITY,
-	[Descripton] VARCHAR(100) NOT NULL,
+	[Description] VARCHAR(100) NOT NULL,
 	ToDoListId INT NOT NULL FOREIGN KEY REFERENCES ToDoList ON DELETE CASCADE,
 	IsCompleted BIT NOT NULL,
 	CreatedOn DATETIME NOT NULL,
