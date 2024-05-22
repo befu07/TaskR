@@ -114,7 +114,7 @@ namespace TaskR.Controllers
             {
                 Id = list.Id,
                 Name = list.Name,
-                Tasks = list.Tasks
+                Tasks = list.Tasks //
             };
             return View(vm);
         }
