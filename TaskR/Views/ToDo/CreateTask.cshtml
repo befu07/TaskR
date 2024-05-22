@@ -5,59 +5,68 @@
 <div class="container">
     <form action="/ToDo/CreateTask" method="post">
 
-        <div class="row">
+        <input name="Id" hidden value="@Model.Id" />
+
+        <div class="row my-3">
             <div class="col-md-3">
                 ToDoList:
             </div>
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row my-3">
             <div class="col-md-3">
                 Description:
             </div>
-            <div class="col-md-6">
-                <textarea class="form-control" type="text" name="Descripton"></textarea>
+            <div class="col-md-9">
+                <textarea style="width:100%" type="text" name="Descripton">@Model.Descripton</textarea>
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Descripton" class="text-danger"></span>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row my-3">
             <div class="col-md-3">
                 Deadline:
             </div>
-            <div class="col-md-6">
-                <input class="form-control" type="datetime-local" name="Deadline" />
+            <div class="col-md-9">
+                <input style="width:100%" type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Deadline" class="text-danger"></span>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row my-3">
             <div class="col-md-3">
                 Priorität:
             </div>
-            <div class="col-md-6">
+            <div class="col-md-9">
                 <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.SelectListItems_Priorities"></select>
             </div>
         </div>
-        <div class="row">
+
+        <div class="row my-3">
             <label class="control-label col-md-3" for="Tags">
                 Tags:
             </label>
-            <div class="col-md-3">
+            <div class="col-md-9">
                 <select asp-for="SelectedTagIds"
                         asp-items="Model.MSL_Tags"
                         class="form-control">
                 </select>
             </div>
-
             <div class="col-md-3">
                 <a href="/ToDo/CreateTag/">++Tag</a>
             </div>
-
         </div>
-        <div class="row ">
-            <div class="col-md-1">
-                <input type="submit" />
+
+        <div class="row my-3">
+            <div class="col-md-9">
+                <input type="submit" value="Erstellen" />
             </div>
         </div>
     </form>

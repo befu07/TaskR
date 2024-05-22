@@ -3,81 +3,163 @@
 <br />
 
 <div class="container">
-<form action="/ToDo/TaskDetails" method="post">
+    <form action="/ToDo/TaskDetails" method="post">
+        @*
+        <input name="Id" hidden value="@Model.Id" />
 
-    <input name="Id" hidden value="@Model.Id" />
-
-    <div class="row my-3">
+        <div class="row my-3">
         <div class="col-md-3">
-            ToDoList:
+        ToDoList:
         </div>
         <div class="col-md-3">
-            <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
+        <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
         </div>
-    </div>
+        </div>
 
-    <div class="row my-3">
+        <div class="row my-3">
         <div class="col-md-3">
-            Description:
+        Description:
         </div>
         <div class="col-md-3">
-            <input type="text" name="Descripton" value="@Model.Descripton" />
+        <textarea type="text" name="Descripton">@Model.Descripton</textarea>
         </div>
         <div class="col-md-12">
-            <span asp-validation-for="Descripton" class="text-danger"></span>
+        <span asp-validation-for="Descripton" class="text-danger"></span>
         </div>
-    </div>
+        </div>
 
-    <div class="row my-3">
+        <div class="row my-3">
         <div class="col-md-3">
-            IsCompleted:
+        Deadline:
         </div>
         <div class="col-md-3">
-            @{
-                var statusString = @Model.IsCompleted ? "on" : "off";
-            }
-            <input type="checkbox" name="IsCompletedString" checked />
+        <input type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
         </div>
-    </div>
-    @if (Model.IsCompleted & Model.CompletedOn.HasValue)
-    {
+        <div class="col-md-12">
+        <span asp-validation-for="Deadline" class="text-danger"></span>
+        </div>
+        </div>
+        <div class="row my-3">
+        <div class="col-md-3">
+        Priorität:
+        </div>
+        <div class="col-md-6">
+        <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.SelectListItems_Priorities"></select>
+        </div>
+        </div>
+        <div class="row my-3">
+        <label class="control-label col-md-3" for="Tags">
+        Tags:
+        </label>
+        <div class="col-md-3">
+        <select asp-for="SelectedTagIds"
+        asp-items="Model.MSL_Tags"
+        class="form-control">
+        </select>
+        </div>
+        <div class="col-md-3">
+        <a href="/ToDo/CreateTag/">++Tag</a>
+        </div>
+        </div> *@
+
+
+        <input name="Id" hidden value="@Model.Id" />
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                ToDoList:
+            </div>
+            <div class="col-md-9">
+                <select class="form-control" asp-for="@Model.ToDoListId" asp-items="@Model.SelectListItems_ToDoList"></select>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Description:
+            </div>
+            <div class="col-md-9">
+                <textarea style="width:100%" type="text" name="Descripton">@Model.Descripton</textarea>
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Descripton" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Deadline:
+            </div>
+            <div class="col-md-9">
+                <input style="width:100%" type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
+            </div>
+            <div class="col-md-12">
+                <span asp-validation-for="Deadline" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                Priorität:
+            </div>
+            <div class="col-md-9">
+                <select class="form-control" asp-for="@Model.Priority" asp-items="@Model.SelectListItems_Priorities"></select>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <label class="control-label col-md-3" for="Tags">
+                Tags:
+            </label>
+            <div class="col-md-9">
+                <select asp-for="SelectedTagIds"
+                        asp-items="Model.MSL_Tags"
+                        class="form-control">
+                </select>
+            </div>
+            <div class="col-md-3">
+                <a href="/ToDo/CreateTag/">++Tag</a>
+            </div>
+        </div>
+
+        <div class="row my-3">
+            <div class="col-md-3">
+                IsCompleted:
+            </div>
+            <div class="col-md-3">
+                @{
+                    var statusString = @Model.IsCompleted ? "checked" : "";
+                }
+                <input type="checkbox" name="IsCompletedString" @statusString />
+            </div>
+        </div>
         <div class="row my-3">
             <div class="col-md-3">
                 CompletedOn:
             </div>
-            <div class="col-md-3">
-                <span>@Model.CompletedOn!.Value.ToString("G")</span>
+            <div class="col-md-9">
+                @if (Model.CompletedOn.HasValue)
+                {
+                    <span>@Model.CompletedOn!.Value.ToString("G")</span>
+                }
             </div>
         </div>
 
-    }
-    <div class="row my-3">
-        <div class="col-md-3">
-            CreatedOn:
+        <div class="row my-3">
+            <div class="col-md-3">
+                CreatedOn:
+            </div>
+            <div class="col-md-9">
+                <span>@Model.CreatedOn.ToString("G")</span>
+            </div>
         </div>
-        <div class="col-md-3">
-            <span>@Model.CreatedOn.ToString("G")</span>
-        </div>
-    </div>
 
-    <div class="row my-3">
-        <div class="col-md-3">
-            Deadline:
+        <div class="row my-3">
+            <div class="col-md-3">
+                <input type="submit" value="Speichern" />
+            </div>
         </div>
-        <div class="col-md-3">
-            <input type="datetime-local" name="Deadline" value="@Model.DeadlineInputString" />
-        </div>
-        <div class="col-md-12">
-            <span asp-validation-for="Deadline" class="text-danger"></span>
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <div class="col-md-3">
-            <input type="submit" />
-        </div>
-    </div>
-</form>
+    </form>
     <br />
     <span style="color:red">
         @TempData["ErrorMessage"]
