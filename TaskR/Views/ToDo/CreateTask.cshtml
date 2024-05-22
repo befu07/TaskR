@@ -1,10 +1,7 @@
 ﻿@model CreateTaskVm
-@{
-}
-
-
 <h6><a href="/ToDo/TDLDetails/@Model.ToDoListId">Zurück zu Liste</a></h6>
 <br />
+
 <div class="container">
     <form action="/ToDo/CreateTask" method="post">
 
@@ -68,5 +65,5 @@
     <span style="color:red">
         @TempData["ErrorMessage"]
     </span>
-    @ViewBag.ErrorMessage
+    @* @ViewBag.ErrorMessage *@
 </div>

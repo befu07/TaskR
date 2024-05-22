@@ -1,5 +1,8 @@
-﻿@model TaskDetailsVm
+﻿@model CreateTaskVm
+<h6><a href="/ToDo/TDLDetails/@Model.ToDoListId">Zurück zu Liste</a></h6>
+<br />
 
+<div class="container">
 <form action="/ToDo/TaskDetails" method="post">
 
     <input name="Id" hidden value="@Model.Id" />
@@ -75,3 +78,9 @@
         </div>
     </div>
 </form>
+    <br />
+    <span style="color:red">
+        @TempData["ErrorMessage"]
+    </span>
+    @* @ViewBag.ErrorMessage *@
+</div>

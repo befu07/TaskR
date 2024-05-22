@@ -224,7 +224,7 @@ namespace TaskR.Controllers
 
             var userId = result.ToDoList.AppUserId;
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
-            var vm = new TaskDetailsVm
+            var vm = new CreateTaskVm
             {
                 Id = id,
                 Descripton = result.Description,
@@ -243,7 +243,7 @@ namespace TaskR.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> TaskDetails(TaskDetailsVm vm)
+        public async Task<IActionResult> TaskDetails(CreateTaskVm vm)
         {
             if (ModelState.IsValid)
             {
@@ -283,7 +283,7 @@ namespace TaskR.Controllers
 
                 var userId = result.ToDoList.AppUserId;
                 var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
-                var errorvm = new TaskDetailsVm
+                var errorvm = new CreateTaskVm
                 {
                     Id = vm.Id,
                     Descripton = result.Description,
