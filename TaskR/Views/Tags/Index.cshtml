@@ -1,0 +1,75 @@
+﻿@model TagIndexVm
+<script type='text/javascript'>
+    function enableBtn(itemId) {
+        document.getElementById("submit" + itemId).hidden = false;
+        // document.getElementById("submit"+itemId).disabled = false;
+    }
+</script>
+@if (User.IsInRole("Admin"))
+{
+    <h1>Globale Tags</h1>
+}
+else
+{
+    <h1>Tags für @User.Identity.Name</h1>
+}
+<table class="table">
+    @foreach (var item in Model.Tags)
+    {
+        <tr>
+            <td>
+                <form action="/Tags/CreateTag" method="post">
+                    <input hidden name="Id" value="@item.Key"/>
+                    <div class="form">
+                        <div class="row">
+                            <div class="col-3 my-2">
+                                <input style="height:100%" onkeypress="enableBtn(@item.Value.Id)" type="text" name="Name" value="@item.Value.Name" />
+                            </div>
+                            <div class="col-2 my-2">
+                                <input type="color" name="HexColor" value="#@item.Value.HexColor" style="height:40px;width:100px" onkeypress="enableBtn(@item.Value.Id)" onclick="enableBtn(@item.Value.Id)" />
+                            </div>
+                            <div class="col-3 my-2">
+                                <input style="height:100%" value="Speichern" type="submit" class="btn btn-outline-success" id="@("submit"+item.Value.Id)" hidden />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </td>
+        </tr>
+    }
+    <tr>
+        <td>
+            <form action="/Tags/CreateTag" method="post">
+                @* <input hidden name="Id" /> *@
+                <div class="form">
+                    <div class="row">
+                        <div class="col-3 my-2">
+                            <input style="height:100%" type="text" name="Name" />
+                        </div>
+                        <div class="col-2 my-2">
+                            <input style="height:40px;width:100px" type="color" name="HexColor" />
+                        </div>
+                        <div class="col-1 my-2">
+                            <input style="height:100%" class="btn btn-success" type="submit" value="Hinzufügen" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </td>
+    </tr>
+</table>
+@*
+<form action="/Tags/CreateTag" method="post">
+    <div class="form">
+        <div class="row">
+            <div class="col-3 my-2">
+                <input style="height:100%" class="form-control" type="text" name="Name" />
+            </div>
+            <div class="col-1 my-2">
+                <input style="height:40px;width:100px" class="form-control" type="color" name="HexColor" />
+            </div>
+        </div>
+        <input type="submit" />
+    </div>
+</form> *@
+<span style="color:red">@TempData["ErrorMessage"]</span>

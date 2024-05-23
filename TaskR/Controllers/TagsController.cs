@@ -1,0 +1,84 @@
+﻿using Azure;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using TaskR.Data;
+using TaskR.Models;
+using TaskR.Services;
+
+namespace TaskR.Controllers
+{
+    public class TagsController : Controller
+    {
+
+        public static string Name = nameof(TagsController).Replace("Controller", null);
+        private readonly ToDoListService _toDoListService;
+        private readonly AccountService _accountService;
+
+        public TagsController(ToDoListService toDoListService, AccountService accountService)
+        {
+            _toDoListService = toDoListService;
+            _accountService = accountService;
+        }
+
+        [Authorize(Roles = "Admin, FreeUser, PremiumUser")]
+        public async Task<IActionResult> Index()
+        {
+            var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+            List<Data.Tag> tags = new();
+            if (User.IsInRole("Admin"))
+            {
+                tags = await _toDoListService.GetGlobalTagsAsync();
+            }
+            else
+            {
+                tags = await _toDoListService.GetUserTagsAsync(userId);
+            }
+            TagIndexVm vm = new TagIndexVm()
+            {
+                Tags = tags.ToDictionary(o => o.Id),
+            };
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateTag(TagIndexVm vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var tag = new Tag
+                {
+                    HexColor = vm.HexColor,
+                    Name = vm.Name
+                };
+                if (!User.IsInRole("Admin"))
+                {
+                    tag.AppUserId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+                }
+                //todo update
+                int result;
+                if (vm.Id == null)
+                {
+                    await Console.Out.WriteLineAsync("newtag" + vm.Id + " " + vm.Name + " " + vm.HexColor);
+                    result = await _toDoListService.CreateTagAsync(tag);
+                }
+                else
+                {
+                    await Console.Out.WriteLineAsync("Id:" + vm.Id + " " + vm.Name + " " + vm.HexColor);
+                    tag.Id = (int)vm.Id;
+                    result = await _toDoListService.UpdateTagAsync(tag);
+                }
+                if (result == -1)
+                {
+                    TempData["ErrorMessage"] = "gehtned";
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                var errormessages = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+                var errorstring = string.Join(", ", errormessages);
+                TempData["ErrorMessage"] = errorstring;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+    }
+}

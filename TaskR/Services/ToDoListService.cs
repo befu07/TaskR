@@ -161,6 +161,18 @@ namespace TaskR.Services
             return filteredAndQueriedTasks.ToList();
         }
 
+        internal async Task<int> UpdateTagAsync(Tag tag)
+        {
+            await Task.Delay(100);
+            return -1;
+        }
+
+        internal async Task<int> CreateTagAsync(Tag newTag)
+        {
+            await Task.Delay(100);
+            return -1;
+        }
+
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
         private static Func<TaskItem, bool> FilterOpen => (t) => !t.IsCompleted;
         private static Func<TaskItem, bool> FilterClosed => (t) => t.IsCompleted;
