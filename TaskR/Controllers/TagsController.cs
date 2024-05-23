@@ -7,6 +7,7 @@ using TaskR.Services;
 
 namespace TaskR.Controllers
 {
+    [Authorize(Roles = "Admin, FreeUser, PremiumUser")]
     public class TagsController : Controller
     {
 
@@ -20,7 +21,6 @@ namespace TaskR.Controllers
             _accountService = accountService;
         }
 
-        [Authorize(Roles = "Admin, FreeUser, PremiumUser")]
         public async Task<IActionResult> Index()
         {
             var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
@@ -46,7 +46,7 @@ namespace TaskR.Controllers
             {
                 var tag = new Tag
                 {
-                    HexColor = vm.HexColor.Replace("#",""),
+                    HexColor = vm.HexColor.Replace("#", ""),
                     Name = vm.Name
                 };
                 if (!User.IsInRole("Admin"))
@@ -87,10 +87,18 @@ namespace TaskR.Controllers
             else
             {
                 var errormessages = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
-                var errorstring = string.Join(", ", errormessages);
+                var errorstring = string.Join("\n ", errormessages);
                 TempData["ErrorMessage"] = errorstring;
                 return RedirectToAction(nameof(Index));
             }
+
+
+        }
+
+        public async Task<IActionResult> DeleteTag(TagIndexVm vm)
+        {
+            // TODO DELETE TAGS
+            return null;
         }
     }
 }
