@@ -90,10 +90,14 @@ namespace TaskR.Services
             return (await _ctx.AppUsers.Where(x => x.Username == username).FirstOrDefaultAsync()).Id;
         }
 
-        internal async Task<List<AppUser>> GetAllUsers()
+        internal async Task<List<AppUser>> GetAllUsersAsync()
         {
-            return await _ctx.AppUsers.Include(o => o.AppRole).ToListAsync();
+            return await _ctx.AppUsers.Include(o => o.AppRole).Include(o => o.Tags).Include(o=>o.ToDoLists).ThenInclude(o=>o.TaskItems).ToListAsync();
         }
 
+        internal async Task<Dictionary<int, string>> GetRolesDictAsync()
+        {
+            return await _ctx.AppRoles.ToDictionaryAsync(o => o.Id, o => o.RoleName);
+        }
     }
 }

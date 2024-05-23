@@ -4,53 +4,82 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().Username)
-            </th>
-@*             <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().PasswordHash)
+                Username
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().Salt)
-            </th> *@
-            <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().RegisteredOn)
+                Registriert
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().Email)
+                Email
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AppUsers.First().AppRole)
+                Rolle
             </th>
-            <th></th>
+            <th>
+                Anzahl Listen
+            </th>
+            <th>
+                Anzahl Aufgaben
+            </th>
+            <th>
+                Anzahl Tags
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.AppUsers) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Username)
-            </td>
-@*             <td>
-                @item.PasswordHash
-            </td>
-            <td>
-                @item.Salt
-            </td> *@
-            <td>
-                @Html.DisplayFor(modelItem => item.RegisteredOn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.AppRole.RoleName)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+        @foreach (var item in Model.AppUsers)
+        {
+            <tr>
+                <form action="/Admin/UserUpdate" method="post">
+
+                    <input hidden name="Id" value="@item.Id" />
+                <td>
+                        @item.Username
+                </td>
+                <td>
+                        @item.RegisteredOn.ToString("d")
+                </td>
+                <td>
+                        @item.Email
+                </td>
+                <td>
+                    <select name="AppRoleId" id="AppRoleId">
+                        @foreach (var role in Model.AppRoleDict)
+                        {
+                            string selectedString = role.Key == item.AppRoleId ? "selected" : String.Empty;
+                            if (role.Key == item.AppRoleId)
+                            {
+                                <option value="@role.Key" selected>
+                                        @role.Value
+                                </option>
+                            }
+                            else
+                            {
+                                <option value="@role.Key">
+                                        @role.Value
+                                </option>
+                            }
+
+                        }
+                    </select>
+                </td>
+                <td>
+                        @item.ToDoLists.Count
+                </td>
+                <td>
+                        @item.ToDoLists.Sum(o => o.TaskItems.Count)
+                </td>
+                <td>
+                        @item.Tags.Count
+                </td>
+                <td>
+                    <input type="submit" value="Speichern" id="@"/>
+                        @*                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                </td>
+                </form>
+            </tr>
+        }
     </tbody>
 </table>

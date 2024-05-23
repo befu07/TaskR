@@ -57,6 +57,93 @@ namespace TaskR.Controllers
             return View(vm);
         }
 
+
+        [HttpGet]
+        public async Task<IActionResult> TDLDetails(int id)
+        {
+            var list = await _toDoListService.GetToDoListByIdAsync(id);
+            if (list == null) { return RedirectToAction(nameof(Index)); }
+            var vm = new TDLDetailsVm
+            {
+                Id = list.Id,
+                Name = list.Name,
+                Tasks = list.TaskItems
+            };
+            return View(vm);
+        }
+        [HttpPost]
+        public async Task<IActionResult> TDLDetails(TDLDetailsVm form)
+        {
+            var toDoList = await _toDoListService.GetToDoListByIdAsync(form.Id);
+            if (toDoList == null) { return RedirectToAction(nameof(Index)); }
+
+            // Filter anwenden
+            var filter = form.Filter;
+            var textquery = form.Query;
+            var filteredTasks = _toDoListService.GetFilteredToDoList(toDoList.TaskItems, filter, textquery);
+            var vm = new TDLDetailsVm
+            {
+                Id = toDoList.Id,
+                Name = toDoList.Name,
+                Tasks = filteredTasks,
+                Filter = form.Filter,
+                Query = form.Query
+            };
+            return View(vm);
+        }
+        [HttpGet]
+        public IActionResult TDLCreate()
+        {
+            //Todo
+            return View();
+        }
+        [HttpPost]
+        public async Task<IActionResult> TDLCreate(ToDoCreateVm vm)
+        {
+            if (ModelState.IsValid)
+            {
+                var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+                bool success = await _toDoListService.CreateNewListAsync(userId, vm.Name);
+                if (!success)
+                {
+                    TempData["ErrorMessage"] = "Name existiert bereits";
+                    return View();
+                }
+                int id = await _toDoListService.GetListIdAsync(userId, vm.Name);
+                if (id < 1)
+                {
+                    TempData["ErrorMessage"] = "Redirect failed";
+                    return View();
+                }
+                else
+                {
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+                }
+                //return RedirectToAction(nameof(Index));
+            }
+            return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> TDLDelete(int id)
+        {
+            var result = await _toDoListService.DeleteToDoListByIdAsync(id);
+            if (result == 1)
+            {
+                TempData["DeleteMessage"] = "Eintrag gelöscht!";
+                return RedirectToAction(nameof(Index));
+            }
+            else if (result > 1)
+            {
+                TempData["DeleteMessage"] = $"Liste und verknüpfte Aufgaben gelöscht!";
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                TempData["DeleteError"] = "Löschen fehlgeschlagen!";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
         [HttpGet]
         public async Task<IActionResult> CreateTask(int id)
         {
@@ -113,94 +200,6 @@ namespace TaskR.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> TDLDetails(int id)
-        {
-            var list = await _toDoListService.GetToDoListByIdAsync(id);
-            if (list == null) { return RedirectToAction(nameof(Index)); }
-            var vm = new TDLDetailsVm
-            {
-                Id = list.Id,
-                Name = list.Name,
-                Tasks = list.TaskItems
-            };
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> TDLDetails(TDLDetailsVm form)
-        {
-            var toDoList = await _toDoListService.GetToDoListByIdAsync(form.Id);
-            if (toDoList == null) { return RedirectToAction(nameof(Index)); }
-
-            // Filter anwenden
-            var filter = form.Filter;
-            var textquery = form.Query;
-            var filteredTasks = _toDoListService.GetFilteredToDoList(toDoList.TaskItems, filter, textquery);
-            var vm = new TDLDetailsVm
-            {
-                Id = toDoList.Id,
-                Name = toDoList.Name,
-                Tasks = filteredTasks,
-                Filter = form.Filter,
-                Query = form.Query
-            };
-            return View(vm);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> TDLCreate(ToDoCreateVm vm)
-        {
-            if (ModelState.IsValid)
-            {
-                var userId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
-                bool success = await _toDoListService.CreateNewListAsync(userId, vm.Name);
-                if (!success)
-                {
-                    TempData["ErrorMessage"] = "Name existiert bereits";
-                    return View();
-                }
-                int id = await _toDoListService.GetListIdAsync(userId, vm.Name);
-                if (id < 1)
-                {
-                    TempData["ErrorMessage"] = "Redirect failed";
-                    return View();
-                }
-                else
-                {
-                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
-                }
-                //return RedirectToAction(nameof(Index));
-            }
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult TDLCreate()
-        {
-            //Todo
-            return View();
-        }
-        [HttpGet]
-        public async Task<IActionResult> TDLDelete(int id)
-        {
-            var result = await _toDoListService.DeleteToDoListByIdAsync(id);
-            if (result == 1)
-            {
-                TempData["DeleteMessage"] = "Eintrag gelöscht!";
-                return RedirectToAction(nameof(Index));
-            }
-            else if (result > 1)
-            {
-                TempData["DeleteMessage"] = $"Liste und verknüpfte Aufgaben gelöscht!";
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                TempData["DeleteError"] = "Löschen fehlgeschlagen!";
-                return RedirectToAction(nameof(Index));
-            }
-        }
-        [HttpGet]
         public async Task<IActionResult> TaskDelete(int id, int listID)
         {
             var result = await _toDoListService.DeleteTaskByIdAsync(id);
@@ -243,7 +242,7 @@ namespace TaskR.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> TaskDetails(CreateTaskVm vm)
+        public async Task<IActionResult> TaskUpdate(CreateTaskVm vm)
         {
             if (ModelState.IsValid)
             {
