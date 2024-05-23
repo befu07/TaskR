@@ -19,7 +19,7 @@ namespace TaskR.Services
         {
             //Überprüfungen
             bool emailExists = await _ctx.AppUsers.Where(o => o.Email == email).AnyAsync();
-            if(emailExists) { return false; }
+            if (emailExists) { return false; }
             bool firstUserInDatabase = !(await _ctx.AppUsers.AnyAsync());
             //Salt erzeugen
             var salt = _cryptoService.GenerateSalt();
@@ -74,30 +74,51 @@ namespace TaskR.Services
 
         internal async Task<AppRole> GetRoleByUserNameAsync(string username)
         {
-            //var dbAppUserRolename = await _ctx.AppUsers
-            //    .Where(x => x.Username == username)
-            //    .Select(o => o.AppRole.RoleName)
-            //    .FirstOrDefaultAsync();
-            //return dbAppUserRolename;
-
-            //var dbAppUser = _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefault();
-            //var dbAppUser = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefault();
-            //return dbAppUser.AppRole.RoleName;
-            return (await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync()).AppRole;
+            var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync()
+            return user.AppRole;
         }
         internal async Task<int> GetAppUserIdByNameAsync(string username)
         {
-            return (await _ctx.AppUsers.Where(x => x.Username == username).FirstOrDefaultAsync()).Id;
+            var user = await _ctx.AppUsers.Where(x => x.Username == username).FirstOrDefaultAsync();
+            return user.Id;
         }
 
         internal async Task<List<AppUser>> GetAllUsersAsync()
         {
-            return await _ctx.AppUsers.Include(o => o.AppRole).Include(o => o.Tags).Include(o=>o.ToDoLists).ThenInclude(o=>o.TaskItems).ToListAsync();
+            return await _ctx.AppUsers.Include(o => o.AppRole).Include(o => o.Tags).Include(o => o.ToDoLists).ThenInclude(o => o.TaskItems).OrderBy(o => o.Email).ToListAsync();
         }
 
         internal async Task<Dictionary<int, string>> GetRolesDictAsync()
         {
             return await _ctx.AppRoles.ToDictionaryAsync(o => o.Id, o => o.RoleName);
+        }
+
+        internal async Task<int> UpdateUserRoleAsync(int id, int appRoleId)
+        {
+            var user = await _ctx.AppUsers.Where(o => o.Id == id).Include(o => o.ToDoLists).FirstOrDefaultAsync();
+            if (user is null) { return -1; }
+
+            #region LastAdmin 
+            if (user.IsAdmin & appRoleId != 1)
+            {
+                int AdminCount = await _ctx.AppUsers.CountAsync(o => o.AppRoleId == 1);
+                if (AdminCount <= 1)
+                {
+                    return -1;
+                }
+            }
+            #endregion
+
+            #region delete Lists
+            if (appRoleId == 1)
+            {
+                var userlists = await _ctx.ToDoLists.Where(o => o.AppUserId == user.Id).ToListAsync();
+                _ctx.ToDoLists.RemoveRange(userlists);
+            }
+            #endregion
+
+            user.AppRoleId = appRoleId;
+            return await _ctx.SaveChangesAsync();
         }
     }
 }

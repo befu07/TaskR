@@ -1,5 +1,12 @@
 ﻿@model UserOverViewVm
 
+<script type='text/javascript'>
+    function enableBtn(itemId) {
+        document.getElementById("submit" + itemId).hidden = false;
+        // document.getElementById("submit"+itemId).disabled = false;
+    }
+</script>
+
 <table class="table">
     <thead>
         <tr>
@@ -16,20 +23,22 @@
                 Rolle
             </th>
             <th>
-                Anzahl Listen
+                #Listen
             </th>
             <th>
-                Anzahl Aufgaben
+                #Aufgaben
             </th>
             <th>
-                Anzahl Tags
+                #Tags
+            </th>
+            <th style="width:100px">
             </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model.AppUsers)
         {
-            <tr>
+            <tr style="height:50px">
                 <form action="/Admin/UserUpdate" method="post">
 
                     <input hidden name="Id" value="@item.Id" />
@@ -43,43 +52,53 @@
                         @item.Email
                 </td>
                 <td>
-                    <select name="AppRoleId" id="AppRoleId">
-                        @foreach (var role in Model.AppRoleDict)
-                        {
-                            string selectedString = role.Key == item.AppRoleId ? "selected" : String.Empty;
-                            if (role.Key == item.AppRoleId)
+                    <select name="AppRoleId" id="AppRoleId" onchange="enableBtn(@item.Id)">
+                            @foreach (var role in Model.AppRoleDict)
                             {
+                                string selectedString = role.Key == item.AppRoleId ? "selected" : String.Empty;
+                                if (role.Key == item.AppRoleId)
+                                {
                                 <option value="@role.Key" selected>
                                         @role.Value
                                 </option>
-                            }
-                            else
-                            {
+                                }
+                                else
+                                {
                                 <option value="@role.Key">
                                         @role.Value
                                 </option>
-                            }
+                                }
 
-                        }
+                            }
                     </select>
                 </td>
                 <td>
-                        @item.ToDoLists.Count
+                        @if (!item.IsAdmin)
+                        {
+                            @item.ToDoLists.Count
+                        }
                 </td>
                 <td>
-                        @item.ToDoLists.Sum(o => o.TaskItems.Count)
+                        @if (!item.IsAdmin)
+                        {
+                            @item.ToDoLists.Sum(o => o.TaskItems.Count)
+                        }
                 </td>
                 <td>
-                        @item.Tags.Count
+                        @if (!item.IsAdmin)
+                        {
+                            @item.Tags.Count
+                        }
                 </td>
-                <td>
-                    <input type="submit" value="Speichern" id="@"/>
-                        @*                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a> *@
+                <td style="width:100px">
+                    <input type="submit" value="Speichern" id="@("submit"+item.Id)" hidden />
                 </td>
                 </form>
             </tr>
         }
     </tbody>
 </table>
+
+<span style="color:red">@TempData["ErrorMessage"]</span>
+<span style="color:green">@TempData["SuccessMessage"]</span>
+

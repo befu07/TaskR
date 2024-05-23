@@ -20,7 +20,6 @@ namespace TaskR.Controllers
         {
             UserOverViewVm vm = new();
             var users = await _accountService.GetAllUsersAsync();
-            users.OrderBy(o => o.Email);
             vm.AppUsers = users;
             vm.AppRoleDict = await _accountService.GetRolesDictAsync();
             return View(vm);
@@ -28,7 +27,31 @@ namespace TaskR.Controllers
         [HttpPost]
         public async Task<IActionResult> UserUpdate(int Id, int AppRoleId)
         {
-            //todo Update Approle
+            try
+            {
+                var result = await _accountService.UpdateUserRoleAsync(Id, AppRoleId);
+                if (result == 1)
+                {
+                    TempData["SuccessMessage"] = "Update erfolgreich";
+                }
+                else if (result == -1)
+                {
+                    TempData["ErrorMessage"] = "Mind 1 Admin";
+                }
+                else if (result > 1)
+                {
+                    TempData["SuccessMessage"] = "Update erfolgreich und Listen gelöscht";
+                }
+                else
+                {
+                    TempData["ErrorMessage"] = "Update fehlgeschlagen";
+                }
+            }
+            catch (Exception)
+            {
+                // working as intended
+                throw;
+            }
 
             return RedirectToAction(nameof(UserOverView));
         }
