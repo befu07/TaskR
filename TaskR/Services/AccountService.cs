@@ -74,7 +74,7 @@ namespace TaskR.Services
 
         internal async Task<AppRole> GetRoleByUserNameAsync(string username)
         {
-            var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync()
+            var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync();
             return user.AppRole;
         }
         internal async Task<int> GetAppUserIdByNameAsync(string username)
