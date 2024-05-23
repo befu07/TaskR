@@ -163,14 +163,17 @@ namespace TaskR.Services
 
         internal async Task<int> UpdateTagAsync(Tag tag)
         {
-            await Task.Delay(100);
-            return -1;
+            var dbtag = await _ctx.Tags.Where(o => o.Id == tag.Id).FirstOrDefaultAsync();
+            if (dbtag == null) return -1;
+            dbtag.Name = tag.Name;
+            dbtag.HexColor = tag.HexColor;
+            return await _ctx.SaveChangesAsync();
         }
 
         internal async Task<int> CreateTagAsync(Tag newTag)
         {
-            await Task.Delay(100);
-            return -1;
+            _ctx.Tags.Add(newTag);
+            return await _ctx.SaveChangesAsync();
         }
 
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();

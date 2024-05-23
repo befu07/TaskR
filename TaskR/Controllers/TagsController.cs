@@ -46,7 +46,7 @@ namespace TaskR.Controllers
             {
                 var tag = new Tag
                 {
-                    HexColor = vm.HexColor,
+                    HexColor = vm.HexColor.Replace("#",""),
                     Name = vm.Name
                 };
                 if (!User.IsInRole("Admin"))
@@ -67,6 +67,18 @@ namespace TaskR.Controllers
                     result = await _toDoListService.UpdateTagAsync(tag);
                 }
                 if (result == -1)
+                {
+                    TempData["ErrorMessage"] = "gehtned";
+                }
+                else if (result == 1)
+                {
+                    TempData["SuccessMessage"] = "Eintrag geUpdated";
+                }
+                else if (result == 0)
+                {
+                    TempData["ErrorMessage"] = "keine änderungen";
+                }
+                else
                 {
                     TempData["ErrorMessage"] = "gehtned";
                 }
