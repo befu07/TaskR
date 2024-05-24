@@ -75,15 +75,6 @@ CREATE TABLE TaskTags
 -- DummyData
 USE [TaskR]
 GO
-Insert into Tags(Name, HexColor) Values 
-('Freizeit', 'ffe599'),
-('Arbeit', 'b6d7a8'),
-('Gesundheit', 'a2c4c9'),
-('Einkaufen', 'a4c2f4'),
-('Haushalt', 'b4a7d6'),
-('Lernen', 'dd7e6b'),
-('Finanz', 'f9cb9c')
-GO
 SET IDENTITY_INSERT [dbo].[AppUser] ON 
 GO
 INSERT [dbo].[AppUser] ([Id], [Username], [PasswordHash], [Salt], [RegisteredOn], [Email], [AppRoleId]) VALUES 
@@ -100,6 +91,7 @@ INSERT [dbo].[AppUser] ([Id], [Username], [PasswordHash], [Salt], [RegisteredOn]
 GO
 SET IDENTITY_INSERT [dbo].[AppUser] OFF
 GO
+
 SET IDENTITY_INSERT [dbo].[ToDoList] ON 
 GO
 INSERT [dbo].[ToDoList] ([Id], [Name], [AppUserId]) VALUES 
@@ -110,6 +102,7 @@ INSERT [dbo].[ToDoList] ([Id], [Name], [AppUserId]) VALUES
 GO
 SET IDENTITY_INSERT [dbo].[ToDoList] OFF
 GO
+
 SET IDENTITY_INSERT [dbo].[TaskItem] ON 
 GO
 declare @nextweek datetime
@@ -126,5 +119,29 @@ INSERT [dbo].[TaskItem] ([Id], [Description], [ToDoListId], [IsCompleted], [Crea
 SET IDENTITY_INSERT [dbo].[TaskItem] OFF
 GO
 
+SET IDENTITY_INSERT [dbo].[Tags] ON
+GO
+INSERT [dbo].[Tags] ([Id], [AppUserId], [Name], [HexColor]) VALUES 
+(1, NULL, N'Freizeit', N'ffe599'),
+(2, NULL, N'Arbeit', N'b6d7a8'),
+(3, NULL, N'Gesundheit', N'a2c4c9'),
+(4, NULL, N'Einkaufen', N'a4c2f4'),
+(5, NULL, N'Haushalt', N'b4a7d6'),
+(6, NULL, N'Lernen', N'dd7e6b'),
+(7, NULL, N'Finanz', N'f9cb9c'),
+(8, 2, N'berniTag', N'ffa3e7')
+SET IDENTITY_INSERT [dbo].[Tags] OFF
+GO
 
-select * from TaskItem
+SET IDENTITY_INSERT [dbo].[TaskItem] ON
+GO
+INSERT [dbo].[TaskTags] ([TaskId], [TagsId]) VALUES 
+(1, 5),
+(1, 8),
+(2, 5),
+(3, 5),
+(4, 5)
+GO
+SET IDENTITY_INSERT [dbo].[TaskItem] OFF
+
+select * from Tags
