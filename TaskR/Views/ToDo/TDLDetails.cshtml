@@ -16,7 +16,6 @@
             <select asp-for="Filter"
                     class="form-control"
                     asp-items="Html.GetEnumSelectList<TaskFilter>()">
-                @* <option>Select Filter ...</option> *@
             </select>
         </div>
         <div class="col-1">
@@ -91,8 +90,10 @@
         }
     </tbody>
 </table>
-
-<p style="color:red">@TempData["ErrorMessage"]</p>
-<p style="color:green">@TempData["DeleteMessage"]</p>
+<p>
+    <span style="color:red">@TempData["ErrorMessage"]</span>
+    <span style="color:green">@TempData["SuccessMessage"]</span>
+    <span style="color:green">@TempData["DeleteMessage"]</span>
+</p>
 
 <a href="/ToDo/CreateTask/@Model.Id">Create Task</a>

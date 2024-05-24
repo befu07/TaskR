@@ -223,84 +223,61 @@ namespace TaskR.Controllers
 
             var userId = result.ToDoList.AppUserId;
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
+            var priorities = _toDoListService.GetPrioritySelectList();
             var vm = new CreateTaskVm
             {
                 Id = id,
                 Descripton = result.Description,
                 ToDoListId = result.ToDoListId,
-                SelectListItems_ToDoList = tdlSelectList,
                 IsCompleted = result.IsCompleted,
                 CreatedOn = result.CreatedOn,
                 CompletedOn = result.CompletedOn,
                 Deadline = result.Deadline,
                 DeadlineInputString = result.Deadline.ToInputString(),
                 Priority = result.Priority,
-
-
-            };
+                SelectListItems_ToDoList = tdlSelectList,
+                SelectListItems_Priorities = priorities
+        };
 
             return View(vm);
         }
-        [HttpPost]
+        //[HttpPost]
         public async Task<IActionResult> TaskUpdate(CreateTaskVm vm)
         {
+            //TODO Redirect, update ordentlich
             if (ModelState.IsValid)
             {
-                TaskItem dbTask = await _toDoListService.GetTaskByIdAsync(vm.Id);
-                if (dbTask == null)
+                TaskItem task = new()
                 {
-                    // Todo Fehlermedlung
-                    return RedirectToAction(nameof(Index));
-                }
-
+                    Id = vm.Id,
+                    ToDoListId = vm.ToDoListId,
+                    Description = vm.Descripton,
+                    Deadline = vm.Deadline,
+                    Priority = vm.Priority
+                };
                 if (vm.IsCompletedString == "on")
                 {
-                    vm.IsCompleted = true;
-                    if (!dbTask.IsCompleted)
-                    {
-                        dbTask.IsCompleted = true;
-                        dbTask.CompletedOn = DateTime.Now;
-                    }
+                    task.IsCompleted = true;
                 }
-                //Todo Update Entry
-                dbTask.Id = vm.Id;
-                dbTask.ToDoListId = vm.ToDoListId;
-                dbTask.Description = vm.Descripton;
-                dbTask.IsCompleted = false;
-                dbTask.CreatedOn = vm.CreatedOn;
-                dbTask.CompletedOn = vm.CompletedOn;
-                dbTask.Deadline = vm.Deadline;
-                dbTask.Priority = vm.Priority;
-                //dbTask.Tags = selectedTags // TODO
-                return RedirectToAction(nameof(Index));
+                int result = await _toDoListService.UpdateTaskAsync(task);
+                if (result < 1 )
+                {
+                    TempData["ErrorMessage"] = "shit happened";
+                }
+                if (result == 1 )
+                {
+                    TempData["SuccessMessage"] = "Aufgabe upgedated";
+                }
+
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
+                //return RedirectToAction(nameof(Index));
             }
             else
             {
-                var result = await _toDoListService.GetTaskByIdAsync(vm.Id);
-                if (result == null)
-                    return RedirectToAction(nameof(Index));
-
-                var userId = result.ToDoList.AppUserId;
-                var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
-                var errorvm = new CreateTaskVm
-                {
-                    Id = vm.Id,
-                    Descripton = result.Description,
-                    ToDoListId = result.ToDoListId,
-                    SelectListItems_ToDoList = tdlSelectList,
-                    IsCompleted = result.IsCompleted,
-                    CreatedOn = result.CreatedOn,
-                    CompletedOn = result.CompletedOn,
-                    Deadline = result.Deadline,
-                    DeadlineInputString = result.Deadline.ToInputString(),
-                    Priority = result.Priority,
-                };
-                return View(errorvm);
-                //TempData["ErrorMessage"] = 
-                ModelState.AddModelError("Description", "blah");
-                return RedirectToAction(nameof(TaskDetails), routeValues: new { id = vm.Id }); // validation geht so nicht
-                //Todo Selectlisten
-                //return View(nameof(TaskDetails), new {id=vm.Id});
+                var errormessages = ModelState.Values.SelectMany(v => v.Errors.Select(b => b.ErrorMessage));
+                var errorstring = string.Join(", ", errormessages);
+                TempData["ErrorMessage"] = errorstring;
+                return RedirectToAction(nameof(TaskDetails), routeValues: new { id = vm.Id });
             }
         }
 

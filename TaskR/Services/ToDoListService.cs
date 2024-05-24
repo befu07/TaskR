@@ -1,4 +1,5 @@
 ﻿using Azure;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
@@ -182,6 +183,33 @@ namespace TaskR.Services
             var dbtag = await _ctx.Tags.Where(o => o.Id == id).FirstOrDefaultAsync();
             if (dbtag == null) return -1;
             _ctx.Tags.Remove(dbtag);
+            return await _ctx.SaveChangesAsync();
+        }
+
+        internal async Task<int> UpdateTaskAsync(TaskItem task)
+        {
+            var dbtask = await GetTaskByIdAsync(task.Id);
+            if (dbtask == null) return -1;
+
+            dbtask.Description = task.Description;
+            dbtask.ToDoListId = task.ToDoListId;
+            dbtask.Description = task.Description;
+            //dbtask.CreatedOn = task.CreatedOn;
+            dbtask.Deadline = task.Deadline;
+            dbtask.Priority = task.Priority;
+
+            dbtask.CompletedOn = task.CompletedOn;
+            if (!dbtask.IsCompleted & task.IsCompleted)
+            {
+                dbtask.IsCompleted = task.IsCompleted;
+                dbtask.CompletedOn = DateTime.Now;
+                dbtask.Priority = null;
+            }
+            if (!task.IsCompleted)
+            {
+                dbtask.IsCompleted = false;
+                dbtask.CompletedOn = null;
+            }
             return await _ctx.SaveChangesAsync();
         }
 
