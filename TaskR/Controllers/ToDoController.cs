@@ -92,9 +92,9 @@ namespace TaskR.Controllers
             return View(vm);
         }
         [HttpGet]
-        public IActionResult TDLCreate()
+        public async Task<IActionResult> TDLCreate()
         {
-            //Todo
+            //Todo schöner machen?
             return View();
         }
         [HttpPost]
@@ -181,7 +181,6 @@ namespace TaskR.Controllers
                     Priority = vm.Priority,
                     Tags = selectedTags
                 };
-                //TODO 
                 await _toDoListService.CreateNewTaskItemAsync(task);
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
             }
@@ -191,34 +190,26 @@ namespace TaskR.Controllers
                 var errorstring = string.Join(", ", errormessages);
                 TempData["ErrorMessage"] = errorstring;
                 return RedirectToAction(nameof(CreateTask), ToDoController.Name, routeValues: new { id = vm.ToDoListId });
-                /*
-                    return RedirectToAction(nameof(CreateTask), ToDoController.Name, fragment: vm.ToDoListId.ToString());
-                    return View(nameof(CreateTask));
-                    return View(nameof(CreateTask), model: new {id = vm.ToDoListId});
-                    return RedirectToAction(nameof(Index), HomeController.Name);
-                 */
             }
         }
-
         [HttpGet]
         public async Task<IActionResult> TaskDelete(int id, int listID)
         {
             var result = await _toDoListService.DeleteTaskByIdAsync(id);
-            if (result == 1)
+            if (result >= 1)
             {
-                TempData["DeleteMessage"] = "Aufgabe gelöscht!";
+                TempData["SuccessMessage"] = "Aufgabe gelöscht!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
             else
             {
-                TempData["DeleteError"] = "Löschen fehlgeschlagen!";
-                return RedirectToAction(nameof(Index));
+                TempData["ErrorMessage"] = "Löschen fehlgeschlagen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
         }
         [HttpGet]
         public async Task<IActionResult> TaskDetails(int id)
         {
-            // Todo TAGS!!
             var result = await _toDoListService.GetTaskByIdAsync(id);
             if (result == null)
                 return RedirectToAction(nameof(Index));
@@ -244,8 +235,8 @@ namespace TaskR.Controllers
                 Priority = result.Priority,
                 SelectListItems_ToDoList = tdlSelectList,
                 SelectListItems_Priorities = priorities,
-                MSL_Tags = new MultiSelectList(result.Tags, "Id", "Name"),
 
+                MSL_Tags = new MultiSelectList(result.Tags, "Id", "Name"), // Todo unnedig
                 SelectedTagIds = result.Tags.Select(t => t.Id).ToArray(),
                 TagsDict = vmtags.ToDictionary(o => o.Id)
             };
@@ -255,7 +246,6 @@ namespace TaskR.Controllers
         [HttpPost]
         public async Task<IActionResult> TaskUpdate(CreateTaskVm vm)
         {
-            //TODO Redirect, update ordentlich
             if (ModelState.IsValid)
             {
                 TaskItem task = new()
@@ -268,7 +258,7 @@ namespace TaskR.Controllers
                 };
                 if (vm.SelectedTagIds != null)
                 {
-                    var tags = await _toDoListService.GetTagsByIdsAsync(vm.SelectedTagIds);
+                    var tags = await _toDoListService.GetTagsByIntArrayAsync(vm.SelectedTagIds);
                     task.Tags = tags;
                 }
                 if (vm.IsCompletedString == "on")

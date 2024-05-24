@@ -53,24 +53,15 @@
             <label class="control-label col-md-3" for="Tags">
                 Tags:
             </label>
-            @* schaffs nicht die bunt zu machen :( *@
-            @*
-            <div class="col-md-9">
-            <select asp-for="SelectedTagIds"
-            asp-items="Model.MSL_Tags"
-            class="form-control">
-            </select>
-            </div>
-            *@
+
             <div class="col-md-9">
                 <select class="form-control" multiple name="SelectedTagIds">
                     @foreach (var tag in Model.TagsDict)
                     {
-                        @* var isSelected = Model.SelectedTagIds.Any(o => o == tag.Key); *@
                         var isSelected = Model.SelectedTagIds.Any(o => o == tag.Key);
                         if (isSelected)
                         {
-                            <option style="accent-color:#@tag.Value.HexColor" value="@tag.Key" selected>@tag.Value.Name</option>
+                            <option style="background-color:#@tag.Value.HexColor" value="@tag.Key" selected>@tag.Value.Name</option>
                         }
                         else
                         {
@@ -79,9 +70,6 @@
                     }
                 </select>
             </div>
-            @*             <div class="col-md-3">
-            <a href="/ToDo/CreateTag/">++Tag</a>
-            </div> *@
         </div>
 
         <div class="row my-3">

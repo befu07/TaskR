@@ -38,6 +38,10 @@
     <thead>
     </thead>
     <tbody>
+        @if (Model.Tasks.Any())
+        {
+            
+        }
         @if (Model.Tasks.Where(o => !o.IsCompleted).Any())
         {
             <tr>

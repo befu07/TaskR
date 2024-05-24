@@ -92,10 +92,6 @@ namespace TaskR.Services
             return list;
         }
 
-        internal async Task<List<Tag>> GetTagsByIntArrayAsync(int[] selectedTagIds)
-        {
-            return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
-        }
 
         internal async System.Threading.Tasks.Task CreateNewTaskItemAsync(TaskItem task)
         {
@@ -215,7 +211,7 @@ namespace TaskR.Services
             return await _ctx.SaveChangesAsync();
         }
 
-        internal async Task<ICollection<Tag>> GetTagsByIdsAsync(int[]? selectedTagIds)
+        internal async Task<List<Tag>> GetTagsByIntArrayAsync(int[] selectedTagIds)
         {
             return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
         }
