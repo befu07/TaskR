@@ -33,23 +33,24 @@
         </div>
     </div>
 </form>
-<table class="table-success table">
+
+<table class="table">
     <thead>
-        <tr>
-            <th scope="col" style="width:70px"></th>
-            <th scope="col">Descripton</th>
-            <th scope="col">IsCompleted</th>
-            <th scope="col">CreatedOn</th>
-            @* <th scope="col">CompletedOn</th> *@
-            <th scope="col">Deadline</th>
-            <th scope="col">Priority</th>
-            <th scope="col">Tags</th>
-            <th scope="col"></th>
-        </tr>
     </thead>
     <tbody>
-
-        @foreach (var item in Model.Tasks)
+        @if (Model.Tasks.Where(o => !o.IsCompleted).Any())
+        {
+            <tr>
+                <th scope="col" style="width:70px"></th>
+                <th scope="col">Descripton</th>
+                <th scope="col">CreatedOn</th>
+                <th scope="col">Deadline</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Tags</th>
+                <th scope="col"></th>
+            </tr>
+        }
+        @foreach (var item in Model.Tasks.Where(o => !o.IsCompleted))
         {
             bool isUrgent = item.IsUrgent();
             string urgentFlag = String.Empty;
@@ -59,14 +60,10 @@
                 urgentFlag = @"!!! ";
                 stlyestring = @"class=table-danger";
             };
-            @* string stlyestring = isUrgent ? @"style=background-color:lightpink" : ""; *@
-            @* var urgentstyle = isUrgent ? "style='background-color:lightpink'" : String.Empty; *@
             <tr @stlyestring>
                 <td scope="row">@urgentFlag</td>
                 <td scope="row">@item.Description</td>
-                <td>@item.IsCompleted</td>
                 <td>@item.CreatedOn.ToString("g")</td>
-                @* <td>@item.CompletedOn</td> *@
                 <td>@item.Deadline?.ToString("d")</td>
                 <td>@item.Priority</td>
                 <td>
@@ -77,13 +74,40 @@
                     }
                 </td>
                 <td>
-                    @*
-                <a>Abschließen</a><br />
-                <a>Details</a><br />
-                <a>Löschen</a><br />
-                *@
-
                     <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info">Edit</a>
+                    <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
+                </td>
+            </tr>
+        }
+        @if (Model.Tasks.Where(o => o.IsCompleted).Any())
+        {
+            <tr>
+                <th scope="col" style="width:70px"></th>
+                <th scope="col">Descripton</th>
+                <th scope="col">CreatedOn</th>
+                <th scope="col">CompletedOn</th>
+                <th scope="col"></th>
+                <th scope="col">Tags</th>
+                <th scope="col"></th>
+            </tr>
+        }
+        @foreach (var item in Model.Tasks.Where(o => o.IsCompleted))
+        {
+            <tr class=table-success>
+                <td></td>
+                <td>@item.Description</td>
+                <td>@item.CreatedOn.ToString("g")</td>
+                <td>@item.CompletedOn?.ToString("d")</td>
+                <td>@item.Priority</td>
+                <td>
+                    @foreach (var t in item.Tags)
+                    {
+                        <span style="background-color:#@t.HexColor;"> @t.Name</span>
+                        <br />
+                    }
+                </td>
+                <td>
+                    @* <a href="/ToDo/TaskDetails/@item.Id" class="btn btn-sm btn-info">Edit</a> *@
                     <a href="/ToDo/TaskDelete/@item.Id?listID=@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Aufgabe löschen?')">Delete</a>
                 </td>
             </tr>

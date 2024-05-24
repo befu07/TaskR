@@ -198,6 +198,8 @@ namespace TaskR.Services
             dbtask.Deadline = task.Deadline;
             dbtask.Priority = task.Priority;
 
+            dbtask.Tags = task.Tags; // Todo testeln
+
             dbtask.CompletedOn = task.CompletedOn;
             if (!dbtask.IsCompleted & task.IsCompleted)
             {
@@ -211,6 +213,11 @@ namespace TaskR.Services
                 dbtask.CompletedOn = null;
             }
             return await _ctx.SaveChangesAsync();
+        }
+
+        internal async Task<ICollection<Tag>> GetTagsByIdsAsync(int[]? selectedTagIds)
+        {
+            return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
         }
 
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();

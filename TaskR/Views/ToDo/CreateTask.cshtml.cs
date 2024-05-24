@@ -28,5 +28,6 @@ public class CreateTaskVm
     public List<SelectListItem>? SelectListItems_Priorities { get; set; } = new();
     public List<SelectListItem>? SelectListItems_ToDoList { get; set; } = new();
     public MultiSelectList? MSL_Tags { get; set; }
+    public Dictionary<int, Tag> TagsDict { get; set; } = new();
     #endregion
 }

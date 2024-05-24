@@ -67,7 +67,7 @@ namespace TaskR.Controllers
             {
                 Id = list.Id,
                 Name = list.Name,
-                Tasks = list.TaskItems
+                Tasks = list.TaskItems.OrderByDescending(o => o.IsUrgent()).ThenBy(o => o.Priority).ToList()
             };
             return View(vm);
         }
@@ -153,12 +153,13 @@ namespace TaskR.Controllers
 
             var globaltags = await _toDoListService.GetGlobalTagsAsync();
             var usertags = await _toDoListService.GetUserTagsAsync(userId);
-            var vmtags = globaltags.Concat(usertags).ToList();
+            var vmtags = usertags.Concat(globaltags).ToList();
 
             var vm = new CreateTaskVm
             {
                 ToDoListId = id,
                 MSL_Tags = new MultiSelectList(vmtags, "Id", "Name"),
+                TagsDict = vmtags.ToDictionary(o => o.Id),
                 SelectListItems_ToDoList = tdlSelectList,
                 SelectListItems_Priorities = priorities,
             };
@@ -217,6 +218,7 @@ namespace TaskR.Controllers
         [HttpGet]
         public async Task<IActionResult> TaskDetails(int id)
         {
+            // Todo TAGS!!
             var result = await _toDoListService.GetTaskByIdAsync(id);
             if (result == null)
                 return RedirectToAction(nameof(Index));
@@ -224,6 +226,11 @@ namespace TaskR.Controllers
             var userId = result.ToDoList.AppUserId;
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
             var priorities = _toDoListService.GetPrioritySelectList();
+
+            var globaltags = await _toDoListService.GetGlobalTagsAsync();
+            var usertags = await _toDoListService.GetUserTagsAsync(userId);
+            var vmtags = usertags.Concat(globaltags).ToList();
+
             var vm = new CreateTaskVm
             {
                 Id = id,
@@ -236,12 +243,16 @@ namespace TaskR.Controllers
                 DeadlineInputString = result.Deadline.ToInputString(),
                 Priority = result.Priority,
                 SelectListItems_ToDoList = tdlSelectList,
-                SelectListItems_Priorities = priorities
-        };
+                SelectListItems_Priorities = priorities,
+                MSL_Tags = new MultiSelectList(result.Tags, "Id", "Name"),
+
+                SelectedTagIds = result.Tags.Select(t => t.Id).ToArray(),
+                TagsDict = vmtags.ToDictionary(o => o.Id)
+            };
 
             return View(vm);
         }
-        //[HttpPost]
+        [HttpPost]
         public async Task<IActionResult> TaskUpdate(CreateTaskVm vm)
         {
             //TODO Redirect, update ordentlich
@@ -253,24 +264,37 @@ namespace TaskR.Controllers
                     ToDoListId = vm.ToDoListId,
                     Description = vm.Descripton,
                     Deadline = vm.Deadline,
-                    Priority = vm.Priority
+                    Priority = vm.Priority,
                 };
+                if (vm.SelectedTagIds != null)
+                {
+                    var tags = await _toDoListService.GetTagsByIdsAsync(vm.SelectedTagIds);
+                    task.Tags = tags;
+                }
                 if (vm.IsCompletedString == "on")
                 {
                     task.IsCompleted = true;
                 }
+
                 int result = await _toDoListService.UpdateTaskAsync(task);
-                if (result < 1 )
+
+                if (result == 0)
+                {
+                    TempData["ErrorMessage"] = "no changes";
+                }
+                if (result < 1)
                 {
                     TempData["ErrorMessage"] = "shit happened";
                 }
-                if (result == 1 )
+                if (result == 1)
                 {
                     TempData["SuccessMessage"] = "Aufgabe upgedated";
                 }
-
+                if (result > 1)
+                {
+                    TempData["SuccessMessage"] = "Aufgabe upgedated und nochwas is passiert ka was wahrsch wegen tags";
+                }
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
-                //return RedirectToAction(nameof(Index));
             }
             else
             {
