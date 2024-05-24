@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Azure;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -173,6 +174,14 @@ namespace TaskR.Services
         internal async Task<int> CreateTagAsync(Tag newTag)
         {
             _ctx.Tags.Add(newTag);
+            return await _ctx.SaveChangesAsync();
+        }
+
+        internal async Task<int> DeleteTagByIdAsync(int id)
+        {
+            var dbtag = await _ctx.Tags.Where(o => o.Id == id).FirstOrDefaultAsync();
+            if (dbtag == null) return -1;
+            _ctx.Tags.Remove(dbtag);
             return await _ctx.SaveChangesAsync();
         }
 

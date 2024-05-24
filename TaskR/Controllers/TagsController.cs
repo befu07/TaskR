@@ -95,10 +95,18 @@ namespace TaskR.Controllers
 
         }
 
-        public async Task<IActionResult> DeleteTag(TagIndexVm vm)
+        public async Task<IActionResult> DeleteTag(int id)
         {
-            // TODO DELETE TAGS
-            return null;
+            int result = await _toDoListService.DeleteTagByIdAsync(id);
+            if (result == -1)
+            {
+                TempData["ErrorMessage"] = "Vorgang fehlgeschlagen";
+            }
+            if(result >= 1)
+            {
+                TempData["SuccessMessage"] = "Eintrag gelöscht";
+            }
+            return RedirectToAction(nameof(Index));
         }
     }
 }

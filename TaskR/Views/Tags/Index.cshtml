@@ -19,9 +19,12 @@ else
         <tr>
             <td>
                 <form action="/Tags/CreateTag" method="post">
-                    <input hidden name="Id" value="@item.Key"/>
+                    <input hidden name="Id" value="@item.Key" />
                     <div class="form">
                         <div class="row">
+                            <div class="col-1 my-2 align-self-center">
+                                    <a href="/Tags/DeleteTag/@item.Key" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
                             <div class="col-3 my-2">
                                 <input style="height:100%" onkeypress="enableBtn(@item.Value.Id)" type="text" name="Name" value="@item.Value.Name" />
                             </div>
@@ -43,6 +46,8 @@ else
                 @* <input hidden name="Id" /> *@
                 <div class="form">
                     <div class="row">
+                        <div class="col-1 my-2">
+                        </div>
                         <div class="col-3 my-2">
                             <input style="height:100%" type="text" name="Name" />
                         </div>
