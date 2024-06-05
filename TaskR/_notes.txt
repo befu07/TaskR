@@ -4,3 +4,41 @@ install-package Microsoft.EntityFrameworkCore.Design
 dotnet ef dbcontext scaffold name="AppDb" Microsoft.EntityFrameworkCore.SqlServer -o Data -f
 
 "AppDb": "Data Source=.\\sqlexpress;Initial Catalog=TaskR;Persist Security Info=True;User ID=sa;Password=Admin2019$;TrustServerCertificate=True",
+
+
+
+TODO as of 2024-06-05
+
+4.2.2.1
+Außerdem soll es eine Zusammenfassung über alle Listen geben: wie viele Aufgaben hat der 
+Benutzer insgesamt, wie viele davon sind noch offen, wie viele Erledigt.
+
+Jede Liste soll auch alle Tags auflisten, die den Items auf der Liste zugeordnet sind.
+
+4.2.2.3
+[...] erledigte Aufgaben absteigend nach dem Datum, an dem sie abgeschlossen wurden. ??????
+[...] n, soll es direkt in auf der ToDo Listenansicht möglich sein, die Priorität der Aufgaben zu verändern, sowie eine Aufgabe als 
+abgeschlossen zu markieren.
+
+// iDipferl: ALLE
+[...] n, sowie alle erledigten Aufgaben der Liste unwiderruflich löschen zu können 
+
+4.2.3.1 
+[...] Free-Tier Benutzer können maximal 20 Aufgaben zu einer Liste hinzufügen.
+Premium-Tier Benutzer können maximal 1000 Aufgaben zu einer Liste hinzufügen.
+Ist das Limit erreicht, sollen Free-Tier Benutzer auf die Möglichkeit eines Premium-Accounts 
+aufmerksam gemacht werden
+
+4.2.3.2 Löschen aller erledigter Aufgaben
+// komplett
+
+4.2.3.3 Detailansicht einer Aufgabe
+löschen
+
+4.2.4.2 Neuen Tag erstellen
+[...] n Tag eine zufällig gewählte Farbe vorschlagen 
+[...] maximal 20 Tags
+
+4.2.4.4 Löschen von Tags
+Dem Benutzer soll es ermöglicht werden Tags zu löschen. Das soll allerdings nur für Tags möglich 
+sein, die nicht gerade einer Aufgabe zugewiesen sind
