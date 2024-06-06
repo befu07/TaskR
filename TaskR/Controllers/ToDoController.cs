@@ -208,6 +208,21 @@ namespace TaskR.Controllers
             }
         }
         [HttpGet]
+        public async Task<IActionResult> TaskComplete(int id, int listID)
+        {
+            var result = await _toDoListService.CompleteTaskByIdAsync(id); // Todo
+            if (result >= 1)
+            {
+                TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "abgeschlossen fehlgeschlagen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
+        }
+        [HttpGet]
         public async Task<IActionResult> TaskDetails(int id)
         {
             var result = await _toDoListService.GetTaskByIdAsync(id);

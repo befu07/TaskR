@@ -223,6 +223,12 @@ namespace TaskR.Services
             return await _ctx.Tags.Where(o => selectedTagIds.Contains(o.Id)).ToListAsync();
         }
 
+        internal async Task<int> CompleteTaskByIdAsync(int id)
+        {
+            //todo
+            throw new NotImplementedException();
+        }
+
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
         private static Func<TaskItem, bool> FilterOpen => (t) => !t.IsCompleted;
         private static Func<TaskItem, bool> FilterClosed => (t) => t.IsCompleted;
