@@ -23,7 +23,7 @@ else
                     <div class="form">
                         <div class="row">
                             <div class="col-1 my-2 align-self-center">
-                                    <a href="/Tags/DeleteTag/@item.Key" class="btn btn-sm btn-danger">Delete</a>
+                                <a href="/Tags/DeleteTag/@item.Key" class="btn btn-sm btn-danger">Delete</a>
                             </div>
                             <div class="col-3 my-2">
                                 <input style="height:100%" onkeypress="enableBtn(@item.Value.Id)" type="text" name="Name" value="@item.Value.Name" />
@@ -51,8 +51,13 @@ else
                         <div class="col-3 my-2">
                             <input style="height:100%" type="text" name="Name" />
                         </div>
+                        @{
+                            var buffer = new byte[3];
+                            Random.Shared.NextBytes(buffer);
+                            var randomcolorstring = Convert.ToHexString(buffer);
+                        }
                         <div class="col-2 my-2">
-                            <input style="height:40px;width:100px" type="color" name="HexColor" />
+                            <input style="height:40px;width:100px" type="color" name="HexColor" value="#@randomcolorstring" />
                         </div>
                         <div class="col-1 my-2">
                             <input style="height:100%" class="btn btn-success" type="submit" value="Hinzufügen" />

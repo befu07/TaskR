@@ -174,10 +174,17 @@ namespace TaskR.Services
             return await _ctx.SaveChangesAsync();
         }
 
-        internal async Task<int> DeleteTagByIdAsync(int id)
+        internal async Task<int> TryDeleteTagByIdAsync(int id)
         {
-            var dbtag = await _ctx.Tags.Where(o => o.Id == id).FirstOrDefaultAsync();
+            // get tag from db
+            var dbtag = await _ctx.Tags.Where(o => o.Id == id).Include(o=>o.Tasks).FirstOrDefaultAsync();
             if (dbtag == null) return -1;
+
+            // evaluate if eligable for deletion
+            var isUsed = dbtag.Tasks.Count() > 0;
+            if (isUsed) return -2;
+
+            // delete and save
             _ctx.Tags.Remove(dbtag);
             return await _ctx.SaveChangesAsync();
         }

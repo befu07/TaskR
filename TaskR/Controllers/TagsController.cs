@@ -97,10 +97,14 @@ namespace TaskR.Controllers
 
         public async Task<IActionResult> DeleteTag(int id)
         {
-            int result = await _toDoListService.DeleteTagByIdAsync(id);
+            int result = await _toDoListService.TryDeleteTagByIdAsync(id);
             if (result == -1)
             {
                 TempData["ErrorMessage"] = "Vorgang fehlgeschlagen";
+            }
+            if (result == -2)
+            {
+                TempData["ErrorMessage"] = "Verwendete Tags können nicht gelöscht werden";
             }
             if(result >= 1)
             {

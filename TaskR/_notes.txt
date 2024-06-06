@@ -36,9 +36,4 @@ aufmerksam gemacht werden
 löschen
 
 4.2.4.2 Neuen Tag erstellen
-[...] n Tag eine zufällig gewählte Farbe vorschlagen 
 [...] maximal 20 Tags
-
-4.2.4.4 Löschen von Tags
-Dem Benutzer soll es ermöglicht werden Tags zu löschen. Das soll allerdings nur für Tags möglich 
-sein, die nicht gerade einer Aufgabe zugewiesen sind
