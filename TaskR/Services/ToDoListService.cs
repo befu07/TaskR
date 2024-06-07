@@ -113,6 +113,17 @@ namespace TaskR.Services
             _ctx.TaskItems.Remove(task);
             return await _ctx.SaveChangesAsync(true);
         }
+        internal async Task<int> DeleteCompletedTasksByListIdAsync(int id)
+        {
+            var tasks = await _ctx.TaskItems.Where(o => o.ToDoListId == id
+            & o.IsCompleted).ToListAsync();
+            if (tasks.Count == 0)
+            {
+                return -2;
+            }
+            _ctx.TaskItems.RemoveRange(tasks);
+            return await _ctx.SaveChangesAsync(true);
+        }
 
         public async Task<TaskItem?> GetTaskByIdAsync(int id)
         {

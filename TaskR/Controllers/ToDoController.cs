@@ -208,6 +208,27 @@ namespace TaskR.Controllers
             }
         }
         [HttpGet]
+        public async Task<IActionResult> DeleteCompleted(int id)
+        {
+            var result = await _toDoListService.DeleteCompletedTasksByListIdAsync(id);
+
+            if (result >= 1)
+            {
+                TempData["SuccessMessage"] = "Fertige Aufgaben gelöscht!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+            }
+            else if(result == -2)
+            {
+                TempData["ErrorMessage"] = "Liste enthält keine fertigen Aufgaben!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Löschen fehlgeschlagen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+            }
+        }
+        [HttpGet]
         public async Task<IActionResult> TaskComplete(int id, int listID)
         {
             var result = await _toDoListService.CompleteTaskByIdAsync(id); // Todo
