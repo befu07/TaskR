@@ -237,9 +237,14 @@ namespace TaskR.Controllers
                 TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
+            else if( result == -2)
+            {
+                TempData["ErrorMessage"] = "Aufgabe bereits abgeschlossen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
             else
             {
-                TempData["ErrorMessage"] = "abgeschlossen fehlgeschlagen!";
+                TempData["ErrorMessage"] = "Vorgang fehlgeschlagen!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
         }

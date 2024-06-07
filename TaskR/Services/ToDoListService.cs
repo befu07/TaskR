@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -188,7 +189,7 @@ namespace TaskR.Services
         internal async Task<int> TryDeleteTagByIdAsync(int id)
         {
             // get tag from db
-            var dbtag = await _ctx.Tags.Where(o => o.Id == id).Include(o=>o.Tasks).FirstOrDefaultAsync();
+            var dbtag = await _ctx.Tags.Where(o => o.Id == id).Include(o => o.Tasks).FirstOrDefaultAsync();
             if (dbtag == null) return -1;
 
             // evaluate if eligable for deletion
@@ -236,8 +237,19 @@ namespace TaskR.Services
 
         internal async Task<int> CompleteTaskByIdAsync(int id)
         {
-            //todo
-            throw new NotImplementedException();
+            var task = await _ctx.TaskItems.FindAsync(id);
+            if (task == null) return -1;
+            if (task.IsCompleted)
+            {
+                return -2; // über normale UI eh nicht möglich
+            }
+            else
+            {
+                task.IsCompleted = true;
+                task.CompletedOn = DateTime.Now;
+                task.Priority = null;
+                return await _ctx.SaveChangesAsync();
+            }
         }
 
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();

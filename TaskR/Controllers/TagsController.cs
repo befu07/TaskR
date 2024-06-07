@@ -53,7 +53,6 @@ namespace TaskR.Controllers
                 {
                     tag.AppUserId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
                 }
-                //todo update
                 int result;
                 if (vm.Id == null)
                 {
