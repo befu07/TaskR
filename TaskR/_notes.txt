@@ -1,13 +1,19 @@
-﻿install-package Microsoft.EntityFrameworkCore.SqlServer
+﻿********** Packages:
+
+install-package Microsoft.EntityFrameworkCore.SqlServer
 install-package Microsoft.EntityFrameworkCore.Design
 
+********** Scaffolding:
+
 dotnet ef dbcontext scaffold name="AppDb" Microsoft.EntityFrameworkCore.SqlServer -o Data -f
+
+********** Connection String:
 
 "AppDb": "Data Source=.\\sqlexpress;Initial Catalog=TaskR;Persist Security Info=True;User ID=sa;Password=Admin2019$;TrustServerCertificate=True",
 
 
 
-TODO as of 2024-06-05
+TODO as of 2024-06-06
 
 4.2.2.1
 Außerdem soll es eine Zusammenfassung über alle Listen geben: wie viele Aufgaben hat der 
@@ -31,6 +37,7 @@ aufmerksam gemacht werden
 
 4.2.3.2 Löschen aller erledigter Aufgaben
 // komplett
+
 
 4.2.4.2 Neuen Tag erstellen
 [...] maximal 20 Tags

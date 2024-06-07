@@ -1,8 +1,16 @@
-﻿USE master
+﻿-- DummyDaten sind unten angehängt
+-- Benutzer admin
+-- password: asdfqwer
+-- Benutzer berni
+-- password: asdfqwer
+-- (passwort überall gleich)
+
+
+USE master
 GO
 
-ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE 
-GO
+--ALTER DATABASE TaskR SET SINGLE_USER WITH ROLLBACK IMMEDIATE 
+--GO
 Drop DATABASE if exists TaskR
 GO
 
@@ -144,4 +152,4 @@ INSERT [dbo].[TaskTags] ([TaskId], [TagsId]) VALUES
 GO
 SET IDENTITY_INSERT [dbo].[TaskItem] OFF
 
-select * from Tags
+--select * from Tags
