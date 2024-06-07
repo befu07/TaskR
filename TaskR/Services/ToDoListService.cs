@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OutputCaching;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -236,21 +237,19 @@ namespace TaskR.Services
 
         internal async Task<int> CompleteTaskByIdAsync(int id)
         {
-            var task = await GetTaskByIdAsync(id);
-            if (task != null)
+            var task = await _ctx.TaskItems.FindAsync(id);
+            if (task == null) return -1;
+            if (task.IsCompleted)
             {
-                if (task.IsCompleted)
-                {
-                    return -2;
-                }
-                else
-                {
-                    task.CompletedOn = DateTime.Now;
-                    task.IsCompleted = true;
-                    return await _ctx.SaveChangesAsync();
-                }
+                return -2; // über normale UI eh nicht möglich
             }
-            return -1;
+            else
+            {
+                task.IsCompleted = true;
+                task.CompletedOn = DateTime.Now;
+                task.Priority = null;
+                return await _ctx.SaveChangesAsync();
+            }
         }
 
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();

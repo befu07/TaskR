@@ -234,16 +234,18 @@ namespace TaskR.Controllers
             var result = await _toDoListService.CompleteTaskByIdAsync(id); // Todo
             switch (result)
             {
-                case -2:
-                    TempData["ErrorMessage"] = "Aufgabe bereits abgeschlossen!";
-                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
-                    break;
-                case 1:
-                    TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
-                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
-                default:
-                    TempData["ErrorMessage"] = "abgeschlossen fehlgeschlagen!";
-                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+                TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
+            else if( result == -2)
+            {
+                TempData["ErrorMessage"] = "Aufgabe bereits abgeschlossen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+            }
+            else
+            {
+                TempData["ErrorMessage"] = "Vorgang fehlgeschlagen!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
         }
         [HttpGet]
