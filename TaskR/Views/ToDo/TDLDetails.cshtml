@@ -69,7 +69,18 @@
                 <td scope="row">@item.Description</td>
                 <td>@item.CreatedOn.ToString("g")</td>
                 <td>@item.Deadline?.ToString("d")</td>
-                <td>@item.Priority</td>
+                <td>
+                    <form action="/ToDo/TaskPriorityUpdate/@Model.Id" method="post">
+                        <input hidden name="tdlid" value="@Model.Id" />
+                        <select name="Priority" onchange="this.form.submit()">
+                            <option selected="@(item.Priority == 1)" value="1">Höchste</option>
+                            <option selected="@(item.Priority == 2)" value="2">Hoch</option>
+                            <option selected="@(item.Priority == 3)" value="3">Normal</option>
+                            <option selected="@(item.Priority == 4)" value="4">Niedrig</option>
+                            <option selected="@(item.Priority == 5)" value="5">Keine</option>
+                        </select>
+                    </form>
+                </td>
                 <td>
                     @foreach (var t in item.Tags)
                     {

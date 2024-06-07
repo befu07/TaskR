@@ -252,6 +252,15 @@ namespace TaskR.Services
             }
         }
 
+        internal async Task<int> UpdateTaskPriorityAsync(int id, int priority)
+        {
+            var task = await _ctx.TaskItems.FindAsync(id);
+            if (task is null) return -1;
+
+            task.Priority = priority;
+            return await _ctx.SaveChangesAsync();   
+        }
+
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
         private static Func<TaskItem, bool> FilterOpen => (t) => !t.IsCompleted;
         private static Func<TaskItem, bool> FilterClosed => (t) => t.IsCompleted;
