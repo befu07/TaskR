@@ -237,7 +237,7 @@ namespace TaskR.Controllers
                 TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
-            else if( result == -2)
+            else if (result == -2)
             {
                 TempData["ErrorMessage"] = "Aufgabe bereits abgeschlossen!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
@@ -334,6 +334,24 @@ namespace TaskR.Controllers
                 TempData["ErrorMessage"] = errorstring;
                 return RedirectToAction(nameof(TaskDetails), routeValues: new { id = vm.Id });
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> TaskPriorityUpdate(int id, int priority, int tdlid)
+        {
+            int result = await _toDoListService.UpdateTaskPriorityAsync(id, priority);
+            switch (result)
+            {
+                case 1:
+                    TempData["SuccessMessage"] = "Aufgabe upgedated";
+                    break;
+                case -1:
+                default:
+                    TempData["ErrorMessage"] = "shit happened";
+                    break;
+
+
+            }
+            return RedirectToAction(nameof(TDLDetails), routeValues: new { id = tdlid });
         }
 
     }
