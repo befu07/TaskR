@@ -108,7 +108,7 @@
                 <th scope="col"></th>
             </tr>
         }
-        @foreach (var item in Model.Tasks.Where(o => o.IsCompleted))
+        @foreach (var item in Model.Tasks.Where(o => o.IsCompleted).OrderByDescending(o=>o.CompletedOn).ToList())
         {
             <tr class=table-success>
                 <td></td>
