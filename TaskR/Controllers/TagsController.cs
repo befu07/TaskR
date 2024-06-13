@@ -51,8 +51,21 @@ namespace TaskR.Controllers
                 };
                 if (!User.IsInRole("Admin"))
                 {
-                    tag.AppUserId = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+                    int userid = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
+                    tag.AppUserId = userid;
+                    var userTags = await _toDoListService.GetUserTagsAsync(userid);
+                    if (userTags.Count >= 20)
+                    {
+                        TempData["ErrorMessage"] = "Maximum 20 Tags!";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else if (userTags.Where(o => o.Name == vm.Name).FirstOrDefault() != null)
+                    {
+                        TempData["ErrorMessage"] = "Tag mit gleichem Namen existiert bereits!";
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
+
                 int result;
                 if (vm.Id == null)
                 {
@@ -105,7 +118,7 @@ namespace TaskR.Controllers
             {
                 TempData["ErrorMessage"] = "Verwendete Tags können nicht gelöscht werden";
             }
-            if(result >= 1)
+            if (result >= 1)
             {
                 TempData["SuccessMessage"] = "Eintrag gelöscht";
             }
