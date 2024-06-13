@@ -21,10 +21,3 @@ Premium-Tier Benutzer können maximal 1000 Aufgaben zu einer Liste hinzufügen.
 Ist das Limit erreicht, sollen Free-Tier Benutzer auf die Möglichkeit eines Premium-Accounts 
 aufmerksam gemacht werden
 
-4.2.4.2 Neuen Tag erstellen
-[...] maximal 20 Tags
-// meine idee
-verhindern dass namen doppelt vergeben werden
-
-??
-Anmelden mit Email
