@@ -217,7 +217,7 @@ namespace TaskR.Controllers
                 TempData["SuccessMessage"] = "Fertige Aufgaben gelöscht!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
             }
-            else if(result == -2)
+            else if (result == -2)
             {
                 TempData["ErrorMessage"] = "Liste enthält keine fertigen Aufgaben!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
@@ -232,15 +232,18 @@ namespace TaskR.Controllers
         public async Task<IActionResult> TaskComplete(int id, int listID)
         {
             var result = await _toDoListService.CompleteTaskByIdAsync(id); // Todo
-            if (result >= 1)
+            switch (result)
             {
-                TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
-                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
-            }
-            else
-            {
-                TempData["ErrorMessage"] = "abgeschlossen fehlgeschlagen!";
-                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+                case -2:
+                    TempData["ErrorMessage"] = "Aufgabe bereits abgeschlossen!";
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+                    break;
+                case 1:
+                    TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
+                default:
+                    TempData["ErrorMessage"] = "abgeschlossen fehlgeschlagen!";
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });
             }
         }
         [HttpGet]

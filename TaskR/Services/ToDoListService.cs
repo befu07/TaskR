@@ -43,7 +43,7 @@ namespace TaskR.Services
 
         internal async Task<List<ToDoList>> GetToDoListsByUserIdAsync(int userId)
         {
-            return (await _ctx.ToDoLists.Include(o => o.TaskItems).ThenInclude(o=>o.Tags).Where(x => x.AppUserId == userId).ToListAsync());
+            return (await _ctx.ToDoLists.Include(o => o.TaskItems).ThenInclude(o => o.Tags).Where(x => x.AppUserId == userId).ToListAsync());
         }
 
         internal async Task<ToDoList?> GetToDoListByIdAsync(int id)
@@ -188,7 +188,7 @@ namespace TaskR.Services
         internal async Task<int> TryDeleteTagByIdAsync(int id)
         {
             // get tag from db
-            var dbtag = await _ctx.Tags.Where(o => o.Id == id).Include(o=>o.Tasks).FirstOrDefaultAsync();
+            var dbtag = await _ctx.Tags.Where(o => o.Id == id).Include(o => o.Tasks).FirstOrDefaultAsync();
             if (dbtag == null) return -1;
 
             // evaluate if eligable for deletion
@@ -236,8 +236,21 @@ namespace TaskR.Services
 
         internal async Task<int> CompleteTaskByIdAsync(int id)
         {
-            //todo
-            throw new NotImplementedException();
+            var task = await GetTaskByIdAsync(id);
+            if (task != null)
+            {
+                if (task.IsCompleted)
+                {
+                    return -2;
+                }
+                else
+                {
+                    task.CompletedOn = DateTime.Now;
+                    task.IsCompleted = true;
+                    return await _ctx.SaveChangesAsync();
+                }
+            }
+            return -1;
         }
 
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
