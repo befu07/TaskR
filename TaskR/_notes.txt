@@ -15,9 +15,6 @@ dotnet ef dbcontext scaffold name="AppDb" Microsoft.EntityFrameworkCore.SqlServe
 
 TODO as of 2024-06-13
 
-4.2.2.3
-[...] erledigte Aufgaben absteigend nach dem Datum, an dem sie abgeschlossen wurden. ??????
-
 4.2.3.1 
 [...] Free-Tier Benutzer können maximal 20 Aufgaben zu einer Liste hinzufügen.
 Premium-Tier Benutzer können maximal 1000 Aufgaben zu einer Liste hinzufügen.
