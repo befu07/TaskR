@@ -232,7 +232,7 @@ namespace TaskR.Controllers
         public async Task<IActionResult> TaskComplete(int id, int listID)
         {
             var result = await _toDoListService.CompleteTaskByIdAsync(id); // Todo
-            switch (result)
+            if (result == 1)
             {
                 TempData["SuccessMessage"] = "Aufgabe abgeschlossen!";
                 return RedirectToAction(nameof(TDLDetails), routeValues: new { id = listID });

@@ -17,7 +17,6 @@ TODO as of 2024-06-13
 
 4.2.2.3
 [...] erledigte Aufgaben absteigend nach dem Datum, an dem sie abgeschlossen wurden. ??????
-[...] n, soll es direkt in auf der ToDo Listenansicht möglich sein, die Priorität der Aufgaben zu verändern
 
 4.2.3.1 
 [...] Free-Tier Benutzer können maximal 20 Aufgaben zu einer Liste hinzufügen.

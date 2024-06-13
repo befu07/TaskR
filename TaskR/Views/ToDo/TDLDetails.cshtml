@@ -70,8 +70,9 @@
                 <td>@item.CreatedOn.ToString("g")</td>
                 <td>@item.Deadline?.ToString("d")</td>
                 <td>
-                    <form action="/ToDo/TaskPriorityUpdate/@Model.Id" method="post">
+                    <form action="/ToDo/TaskPriorityUpdate" method="post">
                         <input hidden name="tdlid" value="@Model.Id" />
+                        <input hidden name="id" value="@item.Id" />
                         <select name="Priority" onchange="this.form.submit()">
                             <option selected="@(item.Priority == 1)" value="1">Höchste</option>
                             <option selected="@(item.Priority == 2)" value="2">Hoch</option>

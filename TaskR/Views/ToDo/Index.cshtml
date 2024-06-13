@@ -22,7 +22,7 @@
         @foreach (var item in Model.ToDoLists)
         {
             int openTasksCount = @item.TaskItems.Where(o => !o.IsCompleted).Count();
-            <tr>
+            <tr style="border:groove">
                 <td style="width:200px">@item.Name</td>
                 <td style="width:200px">@item.TaskItems.Count</td>
                 <td style="width:200px">@openTasksCount</td>
