@@ -2,12 +2,20 @@
 <h2>ToDo - Listen für @Model.Name</h2>
 @* <h3>Übersicht</h3> *@
 <br />
+<div>
+    <h3>Übersicht</h3>
+    <span>  # Listen: @Model.ToDoLists.Count </span>
+    <span>  # Aufgaben: @Model.ToDoLists.Sum(o=>o.TaskItems.Count) </span>
+    <span>  # offen: @Model.ToDoLists.Sum(o=>o.TaskItems.Where(o=>!o.IsCompleted).Count()) </span>
+    <span>  # abgeschlossen: @Model.ToDoLists.Sum(o => o.TaskItems.Where(o => o.IsCompleted).Count()) </span>
+</div>
 <table>
     <thead>
     <th>Name</th>
     <th>Tasks</th>
     <th>Offen</th>
     <th>Details</th>
+    <th>Tags</th>
     <th> </th>
     </thead>
     <tbody>
@@ -21,9 +29,15 @@
                 <td style="width:140px">
                     <a href="/ToDo/TDLDetails/@item.Id">Details</a>
                 </td>
-                <td style="width:140px">
+                <td >
+                    @foreach(var tags in item.TaskItems.SelectMany(o => o.Tags).ToHashSet())
+                    {
+                        <span style="color:#@tags.HexColor"> @tags.Name</span><br />
+                    }
+                    </td>
+                <td style="width:160px" >
                     @* <a href="/ToDo/TDLDelete/@item.Id">Delete</a> *@
-                    <a href="/ToDo/TDLDelete/@item.Id" class="btn btn-sm btn-danger" onclick="return confirm('@item.Name löschen?')">Delete</a>
+                    <a href="/ToDo/TDLDelete/@item.Id" class="btn btn-sm btn-danger ms-3" onclick="return confirm('@item.Name löschen?')">Delete</a>
 
                 </td>
             </tr>

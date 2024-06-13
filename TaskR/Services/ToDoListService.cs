@@ -43,7 +43,7 @@ namespace TaskR.Services
 
         internal async Task<List<ToDoList>> GetToDoListsByUserIdAsync(int userId)
         {
-            return (await _ctx.ToDoLists.Include(o => o.TaskItems).Where(x => x.AppUserId == userId).ToListAsync());
+            return (await _ctx.ToDoLists.Include(o => o.TaskItems).ThenInclude(o=>o.Tags).Where(x => x.AppUserId == userId).ToListAsync());
         }
 
         internal async Task<ToDoList?> GetToDoListByIdAsync(int id)
