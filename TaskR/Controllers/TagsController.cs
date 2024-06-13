@@ -1,6 +1,7 @@
 ﻿using Azure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Drawing;
 using TaskR.Data;
 using TaskR.Models;
 using TaskR.Services;
@@ -49,6 +50,8 @@ namespace TaskR.Controllers
                     HexColor = vm.HexColor.Replace("#", ""),
                     Name = vm.Name
                 };
+
+                #region Tags Limit
                 if (!User.IsInRole("Admin"))
                 {
                     int userid = await _accountService.GetAppUserIdByNameAsync(this.User.Identity.Name);
@@ -65,6 +68,21 @@ namespace TaskR.Controllers
                         return RedirectToAction(nameof(Index));
                     }
                 }
+                else
+                {
+                    var globalTags = await _toDoListService.GetGlobalTagsAsync();
+                    if (globalTags.Count >= 20)
+                    {
+                        TempData["ErrorMessage"] = "Maximum 20 Tags!";
+                        return RedirectToAction(nameof(Index));
+                    }
+                    else if (globalTags.Where(o => o.Name == vm.Name).FirstOrDefault() != null)
+                    {
+                        TempData["ErrorMessage"] = "Tag mit gleichem Namen existiert bereits!";
+                        return RedirectToAction(nameof(Index));
+                    }
+                }
+                #endregion
 
                 int result;
                 if (vm.Id == null)
