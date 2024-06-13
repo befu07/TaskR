@@ -63,15 +63,15 @@ public class AuthController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login(string username, string password)
+    public async Task<IActionResult> Login(string email, string password)
     {
-        var userCanLogIn = await _accountService.CanUserLogInAsync(username, password);
-        Console.WriteLine($"Jemand hat sich mit {username} und {password} eingeloggt: {userCanLogIn}");
+        var userCanLogIn = await _accountService.CanUserLogInAsync(email, password);
+        Console.WriteLine($"Jemand hat sich mit {email} und {password} eingeloggt: {userCanLogIn}");
 
         if (userCanLogIn)
         {
             //Wir erkennen den Benutzer, und er darf sich wirklich "einloggen"
-            var role = await LogUserIntoWebApp(username);
+            var role = await LogUserIntoWebApp(email);
             if (role.RoleName == "Admin")
             {
                 return RedirectToAction(nameof(AdminController.UserOverView), AdminController.Name);
@@ -88,17 +88,21 @@ public class AuthController : Controller
     }
 
     [NonAction]
-    private async Task<AppRole> LogUserIntoWebApp(string username)
+    private async Task<AppRole> LogUserIntoWebApp(string email)
     {
         //1. Claims (Behauptungen) über den Benutzer zusammentragen
         //Ein Claim ist einfach nur ein Key-Value-Pair - Ein Wert mit einem bestimmten Namen
         var claim = new Claim("LastLogin", DateTime.Now.ToString());
 
-        //Damit das ASP.NET Core Auth-System mit Cookies funktioniert, ist ein Claim besonders wichtig: Der Name-Claim
-        var nameClaim = new Claim(ClaimTypes.Name, username);
+        AppUser user = await _accountService.GetUserByEmail(email);
 
-        AppRole role = await _accountService.GetRoleByUserNameAsync(username);
-        var roleClaim = new Claim(ClaimTypes.Role, role.RoleName);
+        //Damit das ASP.NET Core Auth-System mit Cookies funktioniert, ist ein Claim besonders wichtig: Der Name-Claim
+        var nameClaim = new Claim(ClaimTypes.Name, user.Username);
+
+        //AppRole role = await _accountService.GetRoleByUserNameAsync(email);
+        //var roleClaim = new Claim(ClaimTypes.Role, role.RoleName);
+
+        var roleClaim = new Claim(ClaimTypes.Role, user.AppRole.RoleName);
 
         //Alle Claims die dieser Liste (und damit der Identity bzw. dem Principal) hinzugefügt werden,
         //...werden dann im Auth-Cookie gespeichert (und können dort auch wieder ausgelesen werden)
@@ -138,7 +142,7 @@ public class AuthController : Controller
         //...Interface-Elemente anzuzeigen bzw. zu verstecken, je nachdem ob ein eingeloggter oder anonymer Benutzer
         //...die View gerade ansieht).
         //User.Claims erlaubt Zugriff auf alle gespeicherten Claims
-        return role;
+        return user.AppRole;
     }
 }
 
