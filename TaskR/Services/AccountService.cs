@@ -49,10 +49,10 @@ namespace TaskR.Services
             return true;
         }
 
-        public async Task<bool> CanUserLogInAsync(string username, string loginPassword)
+        public async Task<bool> CanUserLogInAsync(string email, string loginPassword)
         {
             //Benutzer in DB suchen und laden
-            var dbAppUser = await _ctx.AppUsers.Where(x => x.Username == username).FirstOrDefaultAsync();
+            var dbAppUser = await _ctx.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
 
             //Wenn Benutzer existiert...
             if (dbAppUser is null) return false;
@@ -119,6 +119,12 @@ namespace TaskR.Services
 
             user.AppRoleId = appRoleId;
             return await _ctx.SaveChangesAsync();
+        }
+
+        internal async Task<AppUser> GetUserByEmail(string email)
+        {
+            var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Email == email).FirstOrDefaultAsync();
+            return user;
         }
     }
 }
