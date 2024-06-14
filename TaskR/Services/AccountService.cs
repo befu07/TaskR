@@ -72,11 +72,11 @@ namespace TaskR.Services
             //Bei Verweisdatentypen wird mit == immer die Verweise verglichen (und nicht der Inhalt) 
         }
 
-        internal async Task<AppRole> GetRoleByUserNameAsync(string username)
-        {
-            var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync();
-            return user.AppRole;
-        }
+        //internal async Task<AppRole> GetRoleByUserNameAsync(string username)
+        //{
+        //    var user = await _ctx.AppUsers.Include(o => o.AppRole).Where(x => x.Username == username).FirstOrDefaultAsync();
+        //    return user.AppRole;
+        //}
         internal async Task<int> GetAppUserIdByNameAsync(string username)
         {
             var user = await _ctx.AppUsers.Where(x => x.Username == username).FirstOrDefaultAsync();
