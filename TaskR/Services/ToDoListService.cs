@@ -261,6 +261,7 @@ namespace TaskR.Services
             return await _ctx.SaveChangesAsync();   
         }
 
+
         private static Func<TaskItem, bool> FilterUrgent => (t) => t.IsUrgent();
         private static Func<TaskItem, bool> FilterOpen => (t) => !t.IsCompleted;
         private static Func<TaskItem, bool> FilterClosed => (t) => t.IsCompleted;

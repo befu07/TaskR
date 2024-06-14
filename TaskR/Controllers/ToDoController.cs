@@ -151,6 +151,20 @@ namespace TaskR.Controllers
             var tdlSelectList = await _toDoListService.GetTDLSelectListByUserIdAsync(userId);
             var priorities = _toDoListService.GetPrioritySelectList();
 
+            var selectedList = await _toDoListService.GetToDoListByIdAsync(id);
+            var taskItemCount = selectedList.TaskItems.Count();
+
+            if (taskItemCount >= 20 & User.IsInRole("FreeUser"))
+            {
+                TempData["ErrorMessage"] = "Limit Reached! Please Upgrade to Premium";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+            }
+            if (taskItemCount >= 1000)
+            {
+                TempData["ErrorMessage"] = "Limit Reached!";
+                return RedirectToAction(nameof(TDLDetails), routeValues: new { id = id });
+            }
+
             var globaltags = await _toDoListService.GetGlobalTagsAsync();
             var usertags = await _toDoListService.GetUserTagsAsync(userId);
             var vmtags = usertags.Concat(globaltags).ToList();
@@ -170,6 +184,19 @@ namespace TaskR.Controllers
         {
             if (ModelState.IsValid)
             {
+                var selectedList = await _toDoListService.GetToDoListByIdAsync(vm.ToDoListId);
+                var taskItemCount = selectedList.TaskItems.Count();
+
+                if (taskItemCount >= 20 & User.IsInRole("FreeUser"))
+                {
+                    TempData["ErrorMessage"] = "Limit Reached! Please Upgrade to Premium";
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
+                }
+                if (taskItemCount >= 1000)
+                {
+                    TempData["ErrorMessage"] = "Limit Reached!";
+                    return RedirectToAction(nameof(TDLDetails), routeValues: new { id = vm.ToDoListId });
+                }
                 var selectedTags = await _toDoListService.GetTagsByIntArrayAsync(vm.SelectedTagIds);
                 TaskItem task = new TaskItem
                 {

@@ -2,6 +2,11 @@
 @model TDLDetailsVm
 
 <h2>Tasks für Liste: @Model.Name</h2>
+<div>
+    <span style="color:red">@TempData["ErrorMessage"]</span>
+    <span style="color:green">@TempData["SuccessMessage"]</span>
+    <span style="color:green">@TempData["DeleteMessage"]</span>
+</div>
 <h6><a href="/ToDo/Index">Zurück zu Übersicht</a></h6>
 
 <h4>Filtern & Suchen</h4>
@@ -131,11 +136,7 @@
         }
     </tbody>
 </table>
-<p>
-    <span style="color:red">@TempData["ErrorMessage"]</span>
-    <span style="color:green">@TempData["SuccessMessage"]</span>
-    <span style="color:green">@TempData["DeleteMessage"]</span>
-</p>
+
 
 <a href="/ToDo/CreateTask/@Model.Id" class="btn btn-sm btn-success" >Create Task</a>
 <a href="/ToDo/DeleteCompleted/@Model.Id" class="btn btn-sm btn-danger" onclick="return confirm('Abgeschlossene Aufgaben löschen?')">Delete Completed</a>
